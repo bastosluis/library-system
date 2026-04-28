@@ -1,15 +1,22 @@
 package com.hiiragi.library.model;
 
+import com.hiiragi.library.enums.BookStatus;
+
 class BookCopy {
     private int id;
-    private Book bookId;
-    // private BookStatus status;
-    
-    public BookCopy(int id, Book bookId) {
+    private int bookId;
+    private BookStatus status;
+
+    public BookCopy(int id, int bookId, BookStatus status) {
         this.id = id;
         this.bookId = bookId;
+        this.status = status;
     }
-    
+
+    public BookCopy(int id, int bookId){
+        this(id, bookId, BookStatus.AVAILABLE);
+    }
+
     public int getId() {
         return id;
     }
@@ -18,11 +25,20 @@ class BookCopy {
         this.id = id;
     }
 
-    public Book getBookId() {
+    public int getBookId() {
         return bookId;
     }
 
-    public void setBookId(Book bookId) {
+    public void setBookId(int bookId) {
         this.bookId = bookId;
     }
+
+    public BookStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookStatus status) {
+        this.status = status;
+    }
+  
 }
