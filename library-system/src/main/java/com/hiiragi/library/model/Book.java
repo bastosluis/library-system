@@ -12,21 +12,27 @@ class Book {
     private String isbn;
     private String description;
     private Year publicationYear;
-    // private Author author;
-    // private Category category;
+    private Author author;
+    private Category category;
     private ArrayList<BookCopy> copies;
-    
-    public Book(int id, String title, String isbn, String description, Year publicationYear, ArrayList<BookCopy> copies) {
+
+    public Book(int id,
+                String title,
+                String isbn,
+                String description,
+                Year publicationYear,
+                Author author,
+                Category category,
+                ArrayList<BookCopy> copies) {
+
         this.id = id;
         this.title = title;
         this.isbn = isbn;
         this.description = description;
         this.publicationYear = publicationYear;
+        this.author = author;
+        this.category = category;
         this.copies = copies;
-    }
-
-    public Book(int id, String title, String isbn, String description, Year publicationYear){
-        this(id, title, isbn, description, publicationYear, new ArrayList<>());
     }
 
     public int getId() {
@@ -67,6 +73,22 @@ class Book {
 
     public void setPublicationYear(Year publicationYear) {
         this.publicationYear = publicationYear;
+    }
+    
+    public Author getAuthor() {
+        return author;
+    }
+    
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+    
+    public Category getCategory() {
+        return category;
+    }
+    
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public ArrayList<BookCopy> getCopies() {
