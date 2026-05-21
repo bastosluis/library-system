@@ -26,7 +26,7 @@ class Book {
     }
 
     public Book(int id, String title, String isbn, String description, Year publicationYear){
-        this(id, title, isbn, description, publicationYear, new ArrayList<BookCopy>());
+        this(id, title, isbn, description, publicationYear, new ArrayList<>());
     }
 
     public int getId() {
