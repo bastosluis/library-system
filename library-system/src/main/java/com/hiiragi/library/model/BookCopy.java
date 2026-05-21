@@ -2,7 +2,7 @@ package com.hiiragi.library.model;
 
 import com.hiiragi.library.enums.BookStatus;
 
-class BookCopy {
+public class BookCopy {
     private int id;
     private int bookId;
     private BookStatus status;

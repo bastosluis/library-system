@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import com.hiiragi.library.enums.BookStatus;
 
-class Book {
-    private int id;
+public class Book {
+    private Long id = null;
     private String title;
     private String isbn;
     private String description;
@@ -16,8 +16,7 @@ class Book {
     private Category category;
     private ArrayList<BookCopy> copies;
 
-    public Book(int id,
-                String title,
+    public Book(String title,
                 String isbn,
                 String description,
                 Year publicationYear,
@@ -25,7 +24,6 @@ class Book {
                 Category category,
                 ArrayList<BookCopy> copies) {
 
-        this.id = id;
         this.title = title;
         this.isbn = isbn;
         this.description = description;
@@ -35,11 +33,25 @@ class Book {
         this.copies = copies;
     }
 
-    public int getId() {
+    @Override
+    public String toString(){
+        // id might be null
+        return String.format("Title: %s%nId: %d%nISBN: %s%nDescription: %s%nYear of publication: %s%nAuthor: %s%nCategory: %s%nCopies: %d", 
+                            title, 
+                            id, 
+                            isbn, 
+                            description, 
+                            publicationYear, 
+                            author.getName(), 
+                            category.getName(), 
+                            copies.size());
+    }
+    
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
