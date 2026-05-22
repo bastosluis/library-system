@@ -4,8 +4,6 @@ package com.hiiragi.library.model;
 import java.time.Year;
 import java.util.ArrayList;
 
-import com.hiiragi.library.enums.BookStatus;
-
 public class Book {
     private Long id = null;
     private String title;
@@ -118,15 +116,5 @@ public class Book {
     public void removeCopy(BookCopy copy){
         this.copies.remove(copy);
     }
-
-    public BookCopy getAvailableCopy() {
-        if (copies == null) {
-            return null;
-        }
-
-        return copies.stream()
-                    .filter(c -> c.getStatus() == BookStatus.AVAILABLE)
-                    .findFirst()
-                    .orElse(null);
-    }
+    
 }
