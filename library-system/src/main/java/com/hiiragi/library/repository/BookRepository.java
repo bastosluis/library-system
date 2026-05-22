@@ -2,7 +2,6 @@ package com.hiiragi.library.repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.hiiragi.library.model.Book;
 /**
@@ -26,9 +25,10 @@ public class BookRepository {
     }
     
     public Book findByTitle(String title) {
-    return books.stream()
-            .filter(book -> book.getTitle().equals(title))
-            .findFirst();
-}
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title)) return book;
+        }
+        return null;
+    }
 
 }

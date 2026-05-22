@@ -31,6 +31,16 @@ public class Book {
         this.copies = copies;
     }
 
+    public Book(String title,
+                String isbn,
+                String description,
+                Year publicationYear,
+                Author author,
+                Category category){
+                
+        this(title, isbn, description, publicationYear, author, category, new ArrayList<>());
+    }
+
     @Override
     public String toString(){
         // id might be null
