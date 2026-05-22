@@ -10,7 +10,7 @@ import com.hiiragi.library.model.Book;
  * class heritance and interface implementations should be preffered and will be a subject of future refactoring of this code.
  */
 public class BookRepository {
-    private List<Book> books = new ArrayList<>();
+    private final List<Book> books = new ArrayList<>();
     Long nextId = 1L;
     
     public Book save(Book book){

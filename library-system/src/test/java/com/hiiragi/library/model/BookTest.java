@@ -1,31 +1,29 @@
 package com.hiiragi.library.model;
 
-import java.time.Year;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+
+import static com.hiiragi.library.util.MockedNames.BOOK_DESCRIPTION;
+import static com.hiiragi.library.util.MockedNames.BOOK_TITLE;
+import static com.hiiragi.library.util.MockedNames.ISBN;
+import static com.hiiragi.library.util.MockedObjects.AUTHOR;
+import static com.hiiragi.library.util.MockedObjects.CATEGORY;
+import static com.hiiragi.library.util.MockedObjects.YEAR;
 
 public class BookTest {
     @Test
     void shouldDoBookCreation(){
-        int id = 0;
-        String bookTitle = "test book title";
-        String isbn = "test ISBN";
-        String description = "test description";
-        Year year = Year.of(2026);
-        Author author = new Author(id, "test author", "author's nationality");
-        Category category = new Category(id, "test category", "category's description");
         Book book = new Book(
-                bookTitle, 
-                isbn,
-                description,
-                year,
-                author,
-                category
+                BOOK_TITLE, 
+                ISBN,
+                BOOK_DESCRIPTION,
+                YEAR,
+                AUTHOR,
+                CATEGORY
                 );
-        // assertEquals(book.getId(), id);
-        assertEquals(book.getIsbn(), isbn);
-        assertEquals(book.getDescription(), description);
-        assertEquals(book.getPublicationYear(), year);
+        // assertEquals(book.getId(), ID);
+        assertEquals(book.getIsbn(), ISBN);
+        assertEquals(book.getDescription(), BOOK_DESCRIPTION);
+        assertEquals(book.getPublicationYear(), YEAR);
     }
 }
