@@ -5,12 +5,13 @@ import com.hiiragi.library.exceptions.BookNotFoundException;
 import com.hiiragi.library.exceptions.NoAvailableCopiesException;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.BookCopy;
+import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.BookRepository;
 
 public class BookService {
     private BookRepository bookRepository;
 
-    public void borrowBook(String title) {
+    public void borrowBook(String title, User user) {
         Book book = bookRepository.findByTitle(title);
 
         if (book == null) {
@@ -24,6 +25,7 @@ public class BookService {
         }
 
         copy.setStatus(BookStatus.BORROWED);
+        user.addBorrowedBookCopy(copy);
     }
 
     public BookCopy getAvailableCopy(Book book){
