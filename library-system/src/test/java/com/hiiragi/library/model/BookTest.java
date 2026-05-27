@@ -56,7 +56,7 @@ public class BookTest {
         book.addCopy(copy1);
         assertTrue(book.getCopies().contains(copy1), "addCopy method did not successfuly add a BookCopy object");
         book.removeCopy(copy1);
-        assertTrue(book.hasCopies(), "addCopy method did not successfuly remove a BookCopy object");
+        assertTrue(!book.hasCopies(), "addCopy method did not successfuly remove a BookCopy object");
     }
 }
 
