@@ -19,7 +19,17 @@ public class BookRepository {
         books.add(book);
         return book;
     }
+
+    public void delete(Book book){
+        books.remove(book);
+    }
     
+    public Book findById(Long id){
+    for (Book book : books) {
+            if (book.getId().equals(id)) return book;
+        }
+        return null;
+    }
     public List<Book> findAll(){
         return List.copyOf(books);
     }
