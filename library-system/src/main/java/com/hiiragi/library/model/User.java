@@ -1,4 +1,6 @@
 package com.hiiragi.library.model;
+import java.util.ArrayList;
+
 import com.hiiragi.library.enums.UserRole;
 
 public class User {
@@ -9,6 +11,7 @@ public class User {
     private boolean isActive; // Whether they can use our library or not
     private int maxLoans; // How many they can borrow at the same time
     private UserRole role; //Admin, Librarian or Member
+    private ArrayList<BookCopy> borrowedCopies = null;
 
     public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role){
         this.name = name;
@@ -78,5 +81,9 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public void addBorrowedBookCopy(BookCopy copy){
+        this.borrowedCopies.add(copy);
     }
 }

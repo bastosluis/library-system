@@ -4,36 +4,62 @@ package com.hiiragi.library.model;
 import java.time.Year;
 import java.util.ArrayList;
 
-import com.hiiragi.library.enums.BookStatus;
-
-class Book {
-    private int id;
+public class Book {
+    private Long id = null;
     private String title;
     private String isbn;
     private String description;
     private Year publicationYear;
-    // private Author author;
-    // private Category category;
+    private Author author;
+    private Category category;
     private ArrayList<BookCopy> copies;
-    
-    public Book(int id, String title, String isbn, String description, Year publicationYear, ArrayList<BookCopy> copies) {
-        this.id = id;
+
+    public Book(String title,
+                String isbn,
+                String description,
+                Year publicationYear,
+                Author author,
+                Category category,
+                ArrayList<BookCopy> copies) {
+
         this.title = title;
         this.isbn = isbn;
         this.description = description;
         this.publicationYear = publicationYear;
+        this.author = author;
+        this.category = category;
         this.copies = copies;
     }
 
-    public Book(int id, String title, String isbn, String description, Year publicationYear){
-        this(id, title, isbn, description, publicationYear, new ArrayList<>());
+    public Book(String title,
+                String isbn,
+                String description,
+                Year publicationYear,
+                Author author,
+                Category category){
+                
+        this(title, isbn, description, publicationYear, author, category, new ArrayList<>());
     }
 
-    public int getId() {
+    @Override
+    public String toString(){
+        // id might be null
+        return String.format("Title: %s%nId: %d%nISBN: %s%nDescription: %s%nYear of publication: %s%nAuthor: %s%nCategory: %s%nCopies: %d", 
+                            title, 
+                            id, 
+                            isbn, 
+                            description, 
+                            publicationYear, 
+                            author.getName(), 
+                            category.getName(), 
+                            copies.size());
+    }
+    
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -68,9 +94,29 @@ class Book {
     public void setPublicationYear(Year publicationYear) {
         this.publicationYear = publicationYear;
     }
+    
+    public Author getAuthor() {
+        return author;
+    }
+    
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+    
+    public Category getCategory() {
+        return category;
+    }
+    
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public ArrayList<BookCopy> getCopies() {
         return copies;
+    }
+
+    public boolean hasCopies() {
+        return !this.copies.isEmpty();
     }
 
     public void setCopies(ArrayList<BookCopy> copies) {
@@ -84,15 +130,5 @@ class Book {
     public void removeCopy(BookCopy copy){
         this.copies.remove(copy);
     }
-
-    public BookCopy getAvailableCopy() {
-        if (copies == null) {
-            return null;
-        }
-
-        return copies.stream()
-                    .filter(c -> c.getStatus() == BookStatus.AVAILABLE)
-                    .findFirst()
-                    .orElse(null);
-    }
+    
 }
