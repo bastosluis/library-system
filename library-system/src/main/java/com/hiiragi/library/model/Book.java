@@ -115,6 +115,10 @@ public class Book {
         return copies;
     }
 
+    public boolean hasCopies() {
+        return !this.copies.isEmpty();
+    }
+
     public void setCopies(ArrayList<BookCopy> copies) {
         this.copies = copies;
     }
