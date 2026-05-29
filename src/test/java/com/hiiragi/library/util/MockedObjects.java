@@ -19,6 +19,7 @@ public final class MockedObjects {
         // Prevent instantiation
     }
 
+    public static final Year YEAR = Year.of(2026);
     public static Author createAuthor() {
         return new Author(AUTHOR_NAME, NATIONALITY);
     }
