@@ -18,9 +18,23 @@ public final class MockedObjects {
     private MockedObjects() {
         // Prevent instantiation
     }
-    public static final int ID = 0;
-    public static final Year YEAR = Year.of(2026);
-    public static final Author AUTHOR = new Author(AUTHOR_NAME, NATIONALITY);
-    public static final Category CATEGORY = new Category(CATEGORY_TITLE, CATEGORY_DESCRIPTION);
-    public static final Book BOOK = new Book(BOOK_TITLE, ISBN, BOOK_DESCRIPTION, YEAR, AUTHOR, CATEGORY);
+
+    public static Author createAuthor() {
+        return new Author(AUTHOR_NAME, NATIONALITY);
+    }
+
+    public static Category createCategory() {
+        return new Category(CATEGORY_TITLE, CATEGORY_DESCRIPTION);
+    }
+
+    public static Book createBook() {
+        return new Book(
+            BOOK_TITLE,
+            ISBN,
+            BOOK_DESCRIPTION,
+            Year.of(2026),
+            createAuthor(),
+            createCategory()
+        );
+    }
 }
