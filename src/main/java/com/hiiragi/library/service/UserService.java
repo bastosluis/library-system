@@ -1,11 +1,10 @@
 package com.hiiragi.library.service;
 
+import java.util.List;
+
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.UserRepository;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -40,7 +39,13 @@ public class UserService {
         return userRepository.findById(id);
     }
     public boolean deleteUser(Long id){
-        return userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            System.err.println(e.getCause());    
+            return false;
+        }
     }
     public boolean deactivateUser(Long id){
         User user = userRepository.findById(id);
