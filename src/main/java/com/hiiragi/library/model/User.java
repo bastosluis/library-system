@@ -3,8 +3,7 @@ import java.util.ArrayList;
 
 import com.hiiragi.library.enums.UserRole;
 
-public class User {
-    private Long id = null;
+public class User extends BaseEntity{
     private String name;
     private String email;
     private String phone;
@@ -25,14 +24,6 @@ public class User {
     @Override
     public String toString() {
         return String.format("Name: %s%nRole: %s%nId: %d%nEmail: %s%nPhone: %s%nActive : %b%nMax Loans: %d%n", name, role.getLabel(), id, email, phone, isActive, maxLoans);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

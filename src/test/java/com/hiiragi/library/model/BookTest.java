@@ -51,7 +51,7 @@ public class BookTest {
                 AUTHOR,
                 CATEGORY
                 );
-        BookCopy copy1 = new BookCopy(1, 0);
+        BookCopy copy1 = new BookCopy(0L);
         // BookCopy copy2 = new BookCopy(2, 0);
         book.addCopy(copy1);
         assertTrue(book.getCopies().contains(copy1), "addCopy method did not successfuly add a BookCopy object");

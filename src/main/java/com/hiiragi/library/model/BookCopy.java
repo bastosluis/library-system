@@ -2,34 +2,24 @@ package com.hiiragi.library.model;
 
 import com.hiiragi.library.enums.BookStatus;
 
-public class BookCopy {
-    private int id;
-    private int bookId;
+public class BookCopy extends BaseEntity{
+    private Long bookId;
     private BookStatus status;
 
-    public BookCopy(int id, int bookId, BookStatus status) {
-        this.id = id;
+    public BookCopy(Long bookId, BookStatus status) {
         this.bookId = bookId;
         this.status = status;
     }
 
-    public BookCopy(int id, int bookId){
-        this(id, bookId, BookStatus.AVAILABLE);
+    public BookCopy(Long bookId){
+        this(bookId, BookStatus.AVAILABLE);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getBookId() {
+    public Long getBookId() {
         return bookId;
     }
 
-    public void setBookId(int bookId) {
+    public void setBookId(Long bookId) {
         this.bookId = bookId;
     }
 

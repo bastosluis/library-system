@@ -1,23 +1,14 @@
 package com.hiiragi.library.model;
 
-public class Author {
-    private int id;
+public class Author extends BaseEntity{
     private String name;
     private String nationality;
 
-    public Author(int id, String name, String nationality) {
-        this.id = id;
+    public Author(String name, String nationality) {
         this.name = name;
         this.nationality = nationality;
     }
-    
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

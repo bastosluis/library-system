@@ -20,7 +20,7 @@ public final class MockedObjects {
     }
     public static final int ID = 0;
     public static final Year YEAR = Year.of(2026);
-    public static final Author AUTHOR = new Author(ID, AUTHOR_NAME, NATIONALITY);
-    public static final Category CATEGORY = new Category(ID, CATEGORY_TITLE, CATEGORY_DESCRIPTION);
+    public static final Author AUTHOR = new Author(AUTHOR_NAME, NATIONALITY);
+    public static final Category CATEGORY = new Category(CATEGORY_TITLE, CATEGORY_DESCRIPTION);
     public static final Book BOOK = new Book(BOOK_TITLE, ISBN, BOOK_DESCRIPTION, YEAR, AUTHOR, CATEGORY);
 }

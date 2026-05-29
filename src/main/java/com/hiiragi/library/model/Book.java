@@ -4,8 +4,7 @@ package com.hiiragi.library.model;
 import java.time.Year;
 import java.util.ArrayList;
 
-public class Book {
-    private Long id = null;
+public class Book extends BaseEntity {
     private String title;
     private String isbn;
     private String description;
@@ -53,14 +52,6 @@ public class Book {
                             author.getName(), 
                             category.getName(), 
                             copies.size());
-    }
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
