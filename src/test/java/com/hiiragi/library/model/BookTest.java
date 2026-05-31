@@ -15,16 +15,16 @@ import static com.hiiragi.library.util.MockedObjects.createCategory;
 public class BookTest {
     @Test
     void shouldDoBookCreation(){
-        final Book BOOK = createBook();
+        final Book book = createBook();
         // assertEquals(book.getId(), ID);
-        assertEquals(BOOK.getIsbn(), ISBN);
-        assertEquals(BOOK.getDescription(), BOOK_DESCRIPTION);
-        assertEquals(BOOK.getPublicationYear(), YEAR);
+        assertEquals(book.getIsbn(), ISBN);
+        assertEquals(book.getDescription(), BOOK_DESCRIPTION);
+        assertEquals(book.getPublicationYear(), YEAR);
     }
 
     @Test
     void shouldGiveCorrectString(){
-        final Book BOOK = createBook();
+        final Book book = createBook();
         String test = String.format("Title: %s%nId: null%nISBN: %s%nDescription: %s%nYear of publication: %s%nAuthor: %s%nCategory: %s%nCopies: 0", 
                             BOOK_TITLE, 
                             ISBN, 
@@ -32,18 +32,18 @@ public class BookTest {
                             YEAR, 
                             createAuthor().getName(), 
                             createCategory().getName());
-        assertEquals(test, BOOK.toString(), "toString method in Book class returned a string different than expected");
+        assertEquals(test, book.toString(), "toString method in Book class returned a string different than expected");
     }
     
     @Test
     void shouldAddThenRemoveCopy(){
-        final Book BOOK = createBook();
+        final Book book = createBook();
         BookCopy copy1 = new BookCopy(0L);
         // BookCopy copy2 = new BookCopy(2, 0);
-        BOOK.addCopy(copy1);
-        assertTrue(BOOK.getCopies().contains(copy1), "addCopy method did not successfuly add a BookCopy object");
-        BOOK.removeCopy(copy1);
-        assertTrue(!BOOK.hasCopies(), "addCopy method did not successfuly remove a BookCopy object");
+        book.addCopy(copy1);
+        assertTrue(book.getCopies().contains(copy1), "addCopy method did not successfuly add a BookCopy object");
+        book.removeCopy(copy1);
+        assertTrue(!book.hasCopies(), "addCopy method did not successfuly remove a BookCopy object");
     }
 }
 
