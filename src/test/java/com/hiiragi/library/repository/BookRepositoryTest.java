@@ -28,6 +28,37 @@ public class BookRepositoryTest {
     }
 
     @Test
+    void shouldSaveMultipleBooks(){
+        Book book1 = createBook();
+        Book book2 = createBook();
+        bookRepo.save(book1);
+        bookRepo.save(book2);
+        assertEquals(2, bookRepo.findAll().size());    
+    }
+
+    @Test
+    void shouldReturnBookWhenIdExists(){
+        Book book = createBook();
+        bookRepo.save(book);
+        assertEquals(book.getId(), bookRepo.findById(book.getId()).getId());
+    }
+
+    @Test
+    void shouldReturnAllBooks(){
+        Book book = createBook();
+        bookRepo.save(book);
+        assertEquals(book, bookRepo.findAll().getFirst());
+    }
+
+    @Test
+    void shouldDeleteBook(){
+        Book book = createBook();
+        bookRepo.save(book);
+        bookRepo.delete(book);
+        assertTrue(bookRepo.isEmpty());
+    }
+
+    @Test
     void shouldDeleteBookById(){
         Book book = createBook();
         // final String errorMessage = "Book is not deleted as expected.";
@@ -45,6 +76,16 @@ public class BookRepositoryTest {
     }
 
     @Test
+    void shouldDeleteOnlySpecifiedBook(){
+        for (int i = 0; i < 10; i++){
+            bookRepo.save(createBook());
+        }
+        Book book = bookRepo.findById(5L);
+        bookRepo.delete(book);
+        assertEquals(null, bookRepo.findById(5L));
+    }
+    
+    @Test
     void shouldIncreaseSizeAfterSave(){
         Book book = createBook();
         bookRepo.save(book);
@@ -52,7 +93,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    void shouldDecreaseSizeAfterSave(){
+    void shouldDecreaseSizeAfterDelete(){
         Book book = createBook();
         bookRepo.save(book);
         bookRepo.deleteById(book.getId());
