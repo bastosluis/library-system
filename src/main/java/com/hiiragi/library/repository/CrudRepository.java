@@ -7,9 +7,11 @@ public interface CrudRepository<T> {
 
     T findById(Long id);
 
-    void deleteById(Long id);
+    boolean deleteById(Long id);
 
     List<T> findAll();
 
-    void delete(T entity);
+    boolean delete(T entity);
+
+    boolean isEmpty();
 }

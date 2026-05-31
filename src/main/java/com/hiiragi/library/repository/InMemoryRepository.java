@@ -20,8 +20,8 @@ public abstract class InMemoryRepository<T extends BaseEntity>
     }
     
     @Override
-    public void delete(T entity) {
-        entities.remove(entity);
+    public boolean delete(T entity) {
+        return entities.remove(entity);
     }
 
     @Override
@@ -35,12 +35,17 @@ public abstract class InMemoryRepository<T extends BaseEntity>
     }
 
     @Override
-    public void deleteById(Long id){
-        delete(findById(id));
+    public boolean deleteById(Long id){
+        return delete(findById(id));
     }
 
     @Override
     public List<T> findAll() {
         return List.copyOf(entities);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return entities.isEmpty();
     }
 }
