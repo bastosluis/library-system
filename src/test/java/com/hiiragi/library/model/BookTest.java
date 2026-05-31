@@ -14,12 +14,17 @@ import static com.hiiragi.library.util.MockedObjects.createCategory;
 
 public class BookTest {
     @Test
-    void shouldDoBookCreation(){
-        final Book book = createBook();
-        // assertEquals(book.getId(), ID);
-        assertEquals(book.getIsbn(), ISBN);
-        assertEquals(book.getDescription(), BOOK_DESCRIPTION);
-        assertEquals(book.getPublicationYear(), YEAR);
+    void shouldCreateBookWithCorrectAttributes() {
+        Author author = createAuthor();
+        Category category = createCategory();
+        Book book = new Book(BOOK_TITLE, ISBN, BOOK_DESCRIPTION, YEAR, author, category);
+        
+        assertEquals(BOOK_TITLE, book.getTitle());
+        assertEquals(ISBN, book.getIsbn());
+        assertEquals(BOOK_DESCRIPTION, book.getDescription());
+        assertEquals(YEAR, book.getPublicationYear());
+        assertEquals(author, book.getAuthor());
+        assertEquals(category, book.getCategory());
     }
 
     @Test
