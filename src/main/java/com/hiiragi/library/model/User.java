@@ -1,5 +1,6 @@
 package com.hiiragi.library.model;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.hiiragi.library.enums.UserRole;
 
@@ -10,15 +11,20 @@ public class User extends BaseEntity{
     private boolean isActive; // Whether they can use our library or not
     private int maxLoans; // How many they can borrow at the same time
     private UserRole role; //Admin, Librarian or Member
-    private ArrayList<BookCopy> borrowedCopies = null;
+    private ArrayList<BookCopy> borrowedCopies;
 
-    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role){
+    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, ArrayList<BookCopy> borrowedCopies){
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.isActive = isActive;
         this.maxLoans = maxLoans;
         this.role = role;
+        this.borrowedCopies = borrowedCopies;
+    }
+
+    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role){
+        this(name, email, phone, isActive, maxLoans, role, new ArrayList<>());
     }
 
     @Override
@@ -76,5 +82,9 @@ public class User extends BaseEntity{
 
     public void addBorrowedBookCopy(BookCopy copy){
         this.borrowedCopies.add(copy);
+    }
+
+    public List<BookCopy> getBorrowedCopies(){
+        return this.borrowedCopies;
     }
 }

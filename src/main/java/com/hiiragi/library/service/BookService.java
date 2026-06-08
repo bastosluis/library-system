@@ -27,7 +27,7 @@ public class BookService extends BaseService<Book, BookRepository> {
             throw new NoAvailableCopiesException(title);
         }
 
-        copy.setStatus(BookStatus.BORROWED);
+        copy.borrow();
         user.addBorrowedBookCopy(copy);
     }
 

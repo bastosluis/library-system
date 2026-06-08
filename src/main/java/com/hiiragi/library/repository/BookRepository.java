@@ -1,6 +1,7 @@
 package com.hiiragi.library.repository;
 
 import com.hiiragi.library.model.Book;
+import com.hiiragi.library.model.BookCopy;
 
 public class BookRepository
         extends InMemoryRepository<Book> {
@@ -12,5 +13,11 @@ public class BookRepository
             }
         }
         return null;
+    }
+
+    @Override
+    public Book save(Book book){
+        book.addCopy(new BookCopy(nextId));
+        return super.save(book);
     }
 }
