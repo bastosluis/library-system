@@ -8,11 +8,14 @@ import com.hiiragi.library.model.BookCopy;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.BookRepository;
 
-public class BookService {
-    private BookRepository bookRepository;
+public class BookService extends BaseService<Book, BookRepository> {
+
+    public BookService(BookRepository bookRepository){
+        super(bookRepository);
+    }
 
     public void borrowBook(String title, User user) {
-        Book book = bookRepository.findByTitle(title);
+        Book book = repository.findByTitle(title);
 
         if (book == null) {
             throw new BookNotFoundException(title);
