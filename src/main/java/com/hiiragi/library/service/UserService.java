@@ -12,7 +12,7 @@ public class UserService extends BaseService<User, UserRepository>{
         super(userRepository);
     }
 
-    public User createUser(String name, String email, String phone, UserRole role){
+    public User createUser(String name, String email, String phone, UserRole role, String login, String password){
         if (!isValidEmail(email)){
             throw new IllegalArgumentException("Invalid email");
         }
@@ -23,9 +23,16 @@ public class UserService extends BaseService<User, UserRepository>{
             throw new IllegalArgumentException("Email already exists");
         }
 
-        User user = new User(name, email, phone, true, 3, role);
+        User user = new User(name, email, phone, true, 3, role, login, password);
 
         return repository.save(user);
+    }
+
+    public User login(String login, String password){
+        User user = repository.findByLogin(login);
+        if (user != null && user.getPassword() == password)
+            return user;
+        return null;
     }
 
     public boolean deactivate(Long id){

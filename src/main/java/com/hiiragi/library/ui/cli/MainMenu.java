@@ -1,18 +1,37 @@
 package com.hiiragi.library.ui.cli;
 
+import com.hiiragi.library.model.User;
+import com.hiiragi.library.service.BookService;
+import com.hiiragi.library.service.UserService;
 import com.hiiragi.library.ui.cli.book.BookMenu;
 import com.hiiragi.library.ui.cli.user.UserMenu;
 
 // Singleton Pattern
-public enum MainMenu {
+public enum MainMenu implements Menu{
     INSTANCE;
     private BookMenu bookMenu;
     private UserMenu userMenu;
+    private BookService bookService;
+    private UserService userService;
+    private LoginMenu loginMenu;
+    private HomeMenu homeMenu;
 
+    @Override
     public void start(){
         while (true) { 
-            
+            loginMenu = new LoginMenu(userService);
+            User loggedUser = loginMenu.login();
+
+            homeMenu = new HomeMenu();
+            homeMenu.setUser(loggedUser);
+            homeMenu.start();
         }
+    }
+
+    @Override
+    public void show() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'show'");
     }
 
     public BookMenu getBookMenu() {
@@ -30,4 +49,13 @@ public enum MainMenu {
     public void setUserMenu(UserMenu userMenu) {
         this.userMenu = userMenu;
     }
+
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
 }

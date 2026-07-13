@@ -18,11 +18,10 @@ public class App {
         BookRepository bookRepository = new BookRepository();
         UserRepository userRepository = new UserRepository();
 
-        BookService bookService = new BookService(bookRepository);
-        UserService userService = new UserService(userRepository);
-
         MainMenu.INSTANCE.setBookMenu(new BookMenu());
         MainMenu.INSTANCE.setUserMenu(new UserMenu());
+        MainMenu.INSTANCE.setBookService(new BookService(bookRepository));
+        MainMenu.INSTANCE.setUserService(new UserService(userRepository));
         MainMenu.INSTANCE.start();
     }
 }

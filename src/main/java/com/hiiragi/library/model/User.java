@@ -12,8 +12,11 @@ public class User extends BaseEntity{
     private int maxLoans; // How many they can borrow at the same time
     private UserRole role; //Admin, Librarian or Member
     private ArrayList<BookCopy> borrowedCopies;
+    private String login;
+    private String password;
 
-    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, ArrayList<BookCopy> borrowedCopies){
+    
+    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, ArrayList<BookCopy> borrowedCopies, String login, String password){
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -21,12 +24,30 @@ public class User extends BaseEntity{
         this.maxLoans = maxLoans;
         this.role = role;
         this.borrowedCopies = borrowedCopies;
+        this.login = login;
+        this.password = password;
+    }
+    
+    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, String login, String password){
+        this(name, email, phone, isActive, maxLoans, role, new ArrayList<>(), login, password);
     }
 
-    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role){
-        this(name, email, phone, isActive, maxLoans, role, new ArrayList<>());
+    public String getLogin() {
+        return login;
     }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     @Override
     public String toString() {
         return String.format("Name: %s%nRole: %s%nId: %d%nEmail: %s%nPhone: %s%nActive : %b%nMax Loans: %d%n", name, role.getLabel(), id, email, phone, isActive, maxLoans);

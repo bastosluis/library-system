@@ -1,9 +1,11 @@
-package com.hiiragi.library.ui.cli.user;
+package com.hiiragi.library.ui.cli;
 
-import com.hiiragi.library.ui.cli.Menu;
+import com.hiiragi.library.model.User;
 
-public class UserMenu implements Menu{
+public class HomeMenu implements Menu{
 
+    private User user;
+    
     @Override
     public void start() {
         // TODO Auto-generated method stub
@@ -15,5 +17,9 @@ public class UserMenu implements Menu{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'show'");
     }
-    
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

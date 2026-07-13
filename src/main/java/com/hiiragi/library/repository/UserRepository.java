@@ -22,6 +22,16 @@ public class UserRepository
         }
         return null;
     }
+
+    public User findByLogin(String login){
+        for (User user : entities) {
+            if (user.getLogin().equals(login)){
+                return user;
+            }
+        }
+        return null;
+    }
+
     // @Override
     // public String toString() {
     //     StringBuilder sb = new StringBuilder();
