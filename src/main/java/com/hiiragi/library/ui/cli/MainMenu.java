@@ -18,20 +18,25 @@ public enum MainMenu implements Menu{
 
     @Override
     public void start(){
-        while (true) { 
+        while (true) {
+            this.show();
             loginMenu = new LoginMenu(userService);
             User loggedUser = loginMenu.login();
+            if (loggedUser == null) 
+                return; // Exit application
 
             homeMenu = new HomeMenu();
             homeMenu.setUser(loggedUser);
+            homeMenu.setBookService(bookService);
+            homeMenu.setUserService(userService);
             homeMenu.start();
         }
     }
 
     @Override
     public void show() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'show'");
+        System.out.println("Starting Library System...\n");
+        System.out.println("Welcome to Hiiragi Library System!\n");
     }
 
     public BookMenu getBookMenu() {
