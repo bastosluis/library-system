@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import com.hiiragi.library.enums.BookStatus;
 import com.hiiragi.library.enums.UserRole;
 import static com.hiiragi.library.util.MockedNames.EMAIL;
+import static com.hiiragi.library.util.MockedNames.LOGIN;
+import static com.hiiragi.library.util.MockedNames.PASSWORD;
 import static com.hiiragi.library.util.MockedNames.PHONE;
 import static com.hiiragi.library.util.MockedNames.USER_NAME;
 import static com.hiiragi.library.util.MockedObjects.createUser;
@@ -18,7 +20,7 @@ public class UserTest {
     @Test
     void shouldCreateUserWithCorrectAttributes(){
         int maxLoans = 3;
-        User user = new User(USER_NAME, EMAIL, PHONE, true, maxLoans, UserRole.MEMBER);
+        User user = new User(USER_NAME, EMAIL, PHONE, true, maxLoans, UserRole.MEMBER, LOGIN, PASSWORD);
         assertEquals(USER_NAME, user.getName());
         assertEquals(USER_NAME, user.getName());
         assertEquals(EMAIL, user.getEmail());
@@ -26,6 +28,8 @@ public class UserTest {
         assertTrue(user.isActive());
         assertEquals(maxLoans, user.getMaxLoans());
         assertEquals(UserRole.MEMBER, user.getRole());
+        assertEquals(LOGIN, user.getLogin());
+        assertEquals(PASSWORD, user.getPassword());
         assertNotNull(user.getBorrowedCopies());
     }
 
@@ -52,8 +56,6 @@ public class UserTest {
     void shouldForbidLibraryUserFromAdminAccess(){
     }
 
-    @Test
-    void 
     
     */
 }

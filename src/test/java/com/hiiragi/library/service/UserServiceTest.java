@@ -11,8 +11,10 @@ import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.UserRepository;
 import static com.hiiragi.library.util.MockedNames.EMAIL;
+import static com.hiiragi.library.util.MockedNames.PASSWORD;
 import static com.hiiragi.library.util.MockedNames.PHONE;
 import static com.hiiragi.library.util.MockedNames.USER_NAME;
+import static com.hiiragi.library.util.MockedNames.LOGIN;
 import static com.hiiragi.library.util.MockedObjects.createUser;
 
 public class UserServiceTest {
@@ -42,28 +44,28 @@ public class UserServiceTest {
 
     @Test
     void shouldCreateUser(){
-        User user = userService.createUser(USER_NAME, EMAIL, PHONE, UserRole.MEMBER);
+        User user = userService.createUser(USER_NAME, EMAIL, PHONE, UserRole.MEMBER, LOGIN, PASSWORD);
         assertEquals(user, userService.findById(user.getId()));
     }
 
     @Test
     void shouldRejectInvalidEmail(){
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, "invalid@", PHONE, UserRole.MEMBER));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, "invalid@", PHONE, UserRole.MEMBER, LOGIN, PASSWORD));
     }
 
     @Test
     void shouldRejectEmptyEmail(){
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, "", PHONE, UserRole.MEMBER));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, "", PHONE, UserRole.MEMBER, LOGIN, PASSWORD));
     }
 
     @Test
     void shouldRejectInvalidPhone(){
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, EMAIL, "1234phone", UserRole.MEMBER));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, EMAIL, "1234phone", UserRole.MEMBER, LOGIN, PASSWORD));
     }
 
     @Test
     void shouldRejectEmptyPhone(){
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, EMAIL,"", UserRole.MEMBER));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(USER_NAME, EMAIL,"", UserRole.MEMBER, LOGIN, PASSWORD));
     }
 
 }

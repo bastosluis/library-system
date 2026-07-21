@@ -17,4 +17,6 @@ public final class MockedNames {
     public static final String EMAIL = "mock@email.com";
     public static final String PHONE = "5585999999999";
     public static final String PHONE_UNPARSED = "+55 85 99999-9999";
+    public static final String LOGIN = "mock user login";
+    public static final String PASSWORD = "mock password";
 }

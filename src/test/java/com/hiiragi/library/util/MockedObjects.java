@@ -15,6 +15,8 @@ import static com.hiiragi.library.util.MockedNames.CATEGORY_TITLE;
 import static com.hiiragi.library.util.MockedNames.EMAIL;
 import static com.hiiragi.library.util.MockedNames.ISBN;
 import static com.hiiragi.library.util.MockedNames.NATIONALITY;
+import static com.hiiragi.library.util.MockedNames.LOGIN;
+import static com.hiiragi.library.util.MockedNames.PASSWORD;
 import static com.hiiragi.library.util.MockedNames.PHONE;
 import static com.hiiragi.library.util.MockedNames.USER_NAME;
 
@@ -50,6 +52,9 @@ public final class MockedObjects {
             PHONE,
             true,
             1,
-            UserRole.MEMBER);
+            UserRole.MEMBER,
+            LOGIN,
+            PASSWORD
+            );
     }
 }
