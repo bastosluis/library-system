@@ -31,6 +31,10 @@ public class BookService extends BaseService<Book, BookRepository> {
         user.addBorrowedBookCopy(copy);
     }
 
+    public Book findByTitle(String title){
+        return this.repository.findByTitle(title);
+    }
+
     public BookCopy getAvailableCopy(Book book){
         for (BookCopy copy : book.getCopies()) {
             if (copy.getStatus() == BookStatus.AVAILABLE) 
