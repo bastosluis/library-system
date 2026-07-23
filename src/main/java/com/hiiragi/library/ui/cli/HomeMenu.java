@@ -1,6 +1,5 @@
 package com.hiiragi.library.ui.cli;
 
-import com.hiiragi.library.ui.cli.book.BookMenu;
 import com.hiiragi.library.ui.cli.util.InputReader;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.User;
@@ -17,6 +16,12 @@ public class HomeMenu implements Menu{
     private UserService userService;
     private BookService bookService;
     
+    public HomeMenu(User user, UserService userService, BookService bookService) {
+        this.user = user;
+        this.userService = userService;
+        this.bookService = bookService;
+    }
+
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
@@ -41,6 +46,7 @@ public class HomeMenu implements Menu{
                 case 3 -> handleListBooks();
                 case 4 -> handleSearchBook();
                 case 5 -> {
+                    System.out.println("Logging out...");
                     return; // logout
                 }
                 case 0 -> System.exit(0);
@@ -59,8 +65,8 @@ public class HomeMenu implements Menu{
     }
     
     private void handleReturnBook() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'handleReturnBook'");
+        // TODO: Loan service still not implemented
+        throw new UnsupportedOperationException("Loan service still not implemented");
     }
 
     private void handleListBooks() {
