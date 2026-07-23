@@ -30,7 +30,11 @@ public class UserService extends BaseService<User, UserRepository>{
 
     public User login(String login, String password){
         User user = repository.findByLogin(login);
-        if (user != null && user.getPassword() == password)
+        if (user == null){
+            return null;
+        }
+
+        if (user.getPassword().equals(password))
             return user;
         return null;
     }

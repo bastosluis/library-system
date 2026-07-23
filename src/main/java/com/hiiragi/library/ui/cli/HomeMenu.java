@@ -38,7 +38,7 @@ public class HomeMenu implements Menu{
 
         while (true){
             
-            int option = InputReader.readInt("Option: \n");
+            int option = InputReader.readInt("Option: ");
 
             switch (option) {
                 case 1 -> handleBorrowBook();
@@ -58,10 +58,10 @@ public class HomeMenu implements Menu{
         String title = InputReader.readString("Book Title: \n");
         try {
             bookService.borrowBook(title, this.user);
+            System.out.println("Successfully borrowed "+title+"!");
         } catch (RuntimeException e) {
             System.err.println(e.getMessage());
         }
-        System.out.println("Successfully borrowed "+title+"!");
     }
     
     private void handleReturnBook() {
@@ -72,9 +72,9 @@ public class HomeMenu implements Menu{
     private void handleListBooks() {
         try {
             List<Book> books = bookService.findAll();
-
+            System.out.println("There are currently these books in the library:\n");
             for (Book book : books) {
-                System.out.println(book.getTitle());
+                System.out.println("- "+book.getTitle()+"\n");
             }
 
         } catch (RuntimeException e) {
@@ -84,8 +84,9 @@ public class HomeMenu implements Menu{
 
     private void handleSearchBook() {
         try {
-            String title = InputReader.readString("Book Title: \n"); 
-            System.out.println(bookService.findByTitle(title).getTitle());
+            String title = InputReader.readString("Book Title: \n");
+            Book foundBook = bookService.findByTitle(title);
+            System.out.println("Found the book "+foundBook.getTitle()+" in the library.\n");
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }

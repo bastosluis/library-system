@@ -24,7 +24,7 @@ public class LoginPrompt{
             }
 
             String option = InputReader.readString(
-                    "Press 1 to try again, or any other key to exit: ");
+                    "Login failed. Press 1 to try again, or any other key to exit: ");
 
             if (!option.equals("1")) {
                 return null;
