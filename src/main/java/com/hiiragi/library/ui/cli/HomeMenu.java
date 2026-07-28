@@ -1,14 +1,13 @@
 package com.hiiragi.library.ui.cli;
 
-import com.hiiragi.library.ui.cli.util.InputReader;
-import com.hiiragi.library.model.Book;
-import com.hiiragi.library.model.User;
-
 import java.util.List;
 
 import com.hiiragi.library.enums.UserRole;
+import com.hiiragi.library.model.Book;
+import com.hiiragi.library.model.User;
 import com.hiiragi.library.service.BookService;
 import com.hiiragi.library.service.UserService;
+import com.hiiragi.library.ui.cli.util.InputReader;
 
 public class HomeMenu implements Menu{
 
@@ -33,23 +32,30 @@ public class HomeMenu implements Menu{
     @Override
     public void start() {
 
-        System.out.println("Welcome, " + user.getName() + "!\n");
         this.show();
 
         while (true){
             
-            int option = InputReader.readInt("Option: ");
-
-            switch (option) {
-                case 1 -> handleBorrowBook();
-                case 2 -> handleReturnBook();
-                case 3 -> handleListBooks();
-                case 4 -> handleSearchBook();
-                case 5 -> {
-                    System.out.println("Logging out...");
-                    return; // logout
+            try{
+                int option = InputReader.readInt("Option: ");
+                switch (option) {
+                    case 1 -> handleBorrowBook();
+                    case 2 -> handleReturnBook();
+                    case 3 -> handleListBooks();
+                    case 4 -> handleSearchBook();
+                    case 5 -> {
+                        System.out.println("Logging out...");
+                        return; // logout
+                    }
+                    case 0 -> System.exit(0);
+                    default -> System.out.println("Please select a valid option.");
                 }
-                case 0 -> System.exit(0);
+            }
+            catch (NumberFormatException e){
+                System.out.println("Please select a valid option.");
+            }
+            catch (UnsupportedOperationException e){
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -66,7 +72,7 @@ public class HomeMenu implements Menu{
     
     private void handleReturnBook() {
         // TODO: Loan service still not implemented
-        throw new UnsupportedOperationException("Loan service still not implemented");
+        throw new UnsupportedOperationException("Loan service still not implemented.");
     }
 
     private void handleListBooks() {
@@ -95,10 +101,10 @@ public class HomeMenu implements Menu{
     @Override
     public void show() {
         System.out.println("\n===============\n");
+        System.out.println("Welcome, " + user.getName() + "!\n");
         System.out.println("Please choose one of the following options (type the according number):\n");
         switch (user.getRole()) {
-            case UserRole.MEMBER:
-                System.out.println("""
+            case UserRole.MEMBER -> System.out.println("""
                     1. Borrow Book
                     2. Return Book
                     3. List Books
@@ -106,11 +112,8 @@ public class HomeMenu implements Menu{
                     5. Logout
                     0. Exit Application
                 """);
-                break;
                 
-                default:
-                    System.out.println("Invalid user role.");
-                    break;
+                default -> System.out.println("Invalid user role.");
                 }
         System.out.println("\n===============\n");
     }
