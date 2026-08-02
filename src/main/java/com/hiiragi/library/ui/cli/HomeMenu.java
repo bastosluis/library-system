@@ -1,6 +1,7 @@
 package com.hiiragi.library.ui.cli;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.Book;
@@ -89,13 +90,17 @@ public class HomeMenu implements Menu{
     }
 
     private void handleSearchBook() {
-        try {
             String title = InputReader.readString("Book Title: \n");
-            Book foundBook = bookService.findByTitle(title);
-            System.out.println("Found the book "+foundBook.getTitle()+" in the library.\n");
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-        }
+            Optional<Book> foundBook = bookService.findByTitle(title);
+
+            if (foundBook.isPresent()) {
+                System.out.println(
+                    "Found the book " +
+                    foundBook.get().getTitle()
+                );
+            } else {
+                System.out.println("Book not found.");
+            }
     }    
     
     @Override

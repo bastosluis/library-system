@@ -1,5 +1,7 @@
 package com.hiiragi.library.repository;
 
+import java.util.Optional;
+
 import com.hiiragi.library.model.User;
 
 public class UserRepository
@@ -14,30 +16,22 @@ public class UserRepository
         return false;
     }
     
-    public User findByName(String name){
+    public Optional<User> findByName(String name){
         for (User user : entities) {
             if (user.getName().equals(name)){
-                return user;
+                return Optional.of(user);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
-    public User findByLogin(String login){
+    public Optional<User> findByLogin(String login){
         for (User user : entities) {
             if (user.getLogin().equals(login)){
-                return user;
+                return Optional.of(user);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
-    // @Override
-    // public String toString() {
-    //     StringBuilder sb = new StringBuilder();
-    //     for(User user : entities){
-    //         sb.append(user.toString()).append("\n");
-    //     }
-    //     return sb.toString();
-    // }
 }

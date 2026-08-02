@@ -1,5 +1,7 @@
 package com.hiiragi.library.service;
 
+import java.util.Optional;
+
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.UserRepository;
@@ -10,6 +12,14 @@ public class UserService extends BaseService<User, UserRepository>{
 
     public UserService(UserRepository userRepository){
         super(userRepository);
+    }
+
+    public Optional<User> add(User user){
+        Optional<User> existentUser = this.repository.findByLogin(user.getLogin());
+        if (existentUser.isPresent()){
+            return Optional.empty();
+        }
+        return Optional.of(this.repository.save(user));
     }
 
     public User createUser(String name, String email, String phone, UserRole role, String login, String password){
@@ -28,23 +38,28 @@ public class UserService extends BaseService<User, UserRepository>{
         return repository.save(user);
     }
 
-    public User login(String login, String password){
-        User user = repository.findByLogin(login);
-        if (user == null){
-            return null;
+    public Optional<User> login(String login, String password){
+        Optional<User> optionalUser = repository.findByLogin(login);
+
+        if (optionalUser.isEmpty()) {
+            return Optional.empty();
         }
 
-        if (user.getPassword().equals(password))
-            return user;
-        return null;
+        User user = optionalUser.get();
+
+        if (!user.getPassword().equals(password)) {
+            return Optional.empty();
+        }
+
+        return optionalUser;
     }
 
     public boolean deactivate(Long id){
-        User user = repository.findById(id);
-        if(user == null){
+        Optional<User> user = repository.findById(id);
+        if(user.isEmpty()){
             return false;
         }
-        user.setActive(false);
+        user.get().setActive(false);
         return true;
     }
 

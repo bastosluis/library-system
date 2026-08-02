@@ -1,5 +1,7 @@
 package com.hiiragi.library.service;
 
+import java.util.Optional;
+
 import com.hiiragi.library.enums.BookStatus;
 import com.hiiragi.library.exceptions.BookNotFoundException;
 import com.hiiragi.library.exceptions.NoAvailableCopiesException;
@@ -13,33 +15,53 @@ public class BookService extends BaseService<Book, BookRepository> {
     public BookService(BookRepository bookRepository){
         super(bookRepository);
     }
+    
+    public Book add(Book book, BookStatus status){
+        Optional<Book> existentBook = this.repository.findByTitle(book.getTitle()); 
+        if (existentBook.isPresent()){
+            this.repository.addCopy(book, status);
+            return book;
+        }
+        return this.repository.save(book, status);
+    }
 
+    public Book add(Book book){
+        Optional<Book> existentBook = this.repository.findByTitle(book.getTitle()); 
+        if (existentBook.isPresent()){
+            this.repository.addCopy(book);
+            return book;
+        }
+        return this.repository.save(book);
+    }
+    
     public void borrowBook(String title, User user) {
-        Book book = repository.findByTitle(title);
+        Optional<Book> book = repository.findByTitle(title);
 
-        if (book == null) {
+        if (book.isEmpty()) {
             throw new BookNotFoundException(title);
         }
 
-        BookCopy copy = getAvailableCopy(book);
+        Optional<BookCopy> optionalCopy = getAvailableCopy(book.get());
 
-        if (copy == null) {
+        if (optionalCopy.isEmpty()) {
             throw new NoAvailableCopiesException(title);
         }
-
+        
+        BookCopy copy = optionalCopy.get();
+        
         copy.borrow();
         user.addBorrowedBookCopy(copy);
     }
 
-    public Book findByTitle(String title){
+    public Optional<Book> findByTitle(String title){
         return this.repository.findByTitle(title);
     }
 
-    public BookCopy getAvailableCopy(Book book){
+    public Optional<BookCopy> getAvailableCopy(Book book){
         for (BookCopy copy : book.getCopies()) {
             if (copy.getStatus() == BookStatus.AVAILABLE) 
-                return copy;
+                return Optional.of(copy);
         }
-        return null;
+        return Optional.empty();
     }
 }

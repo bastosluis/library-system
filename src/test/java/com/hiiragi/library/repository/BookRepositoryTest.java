@@ -1,5 +1,7 @@
 package com.hiiragi.library.repository;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,7 +26,7 @@ public class BookRepositoryTest {
         // final String errorMessage = "Saved book is different than expected.";
         // BookRepository bookRepo = new BookRepository();
         bookRepo.save(book);
-        assertEquals(book, bookRepo.findByTitle(book.getTitle()));
+        assertEquals(book, bookRepo.findByTitle(book.getTitle()).get());
     }
 
     @Test
@@ -40,7 +42,7 @@ public class BookRepositoryTest {
     void shouldReturnBookWhenIdExists(){
         Book book = createBook();
         bookRepo.save(book);
-        assertEquals(book.getId(), bookRepo.findById(book.getId()).getId());
+        assertEquals(book.getId(), bookRepo.findById(book.getId()).get().getId());
     }
 
     @Test
@@ -80,9 +82,9 @@ public class BookRepositoryTest {
         for (int i = 0; i < 10; i++){
             bookRepo.save(createBook());
         }
-        Book book = bookRepo.findById(5L);
+        Book book = bookRepo.findById(5L).get();
         bookRepo.delete(book);
-        assertEquals(null, bookRepo.findById(5L));
+        assertEquals(Optional.empty(), bookRepo.findById(5L));
     }
     
     @Test

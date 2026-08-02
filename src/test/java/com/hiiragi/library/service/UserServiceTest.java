@@ -11,10 +11,10 @@ import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.UserRepository;
 import static com.hiiragi.library.util.MockedNames.EMAIL;
+import static com.hiiragi.library.util.MockedNames.LOGIN;
 import static com.hiiragi.library.util.MockedNames.PASSWORD;
 import static com.hiiragi.library.util.MockedNames.PHONE;
 import static com.hiiragi.library.util.MockedNames.USER_NAME;
-import static com.hiiragi.library.util.MockedNames.LOGIN;
 import static com.hiiragi.library.util.MockedObjects.createUser;
 
 public class UserServiceTest {
@@ -31,7 +31,7 @@ public class UserServiceTest {
     void shouldAddUser(){
         User user = createUser();
         userService.add(user);
-        assertEquals(user, userService.findById(user.getId()));
+        assertEquals(user, userService.findById(user.getId()).get());
     }
     
     @Test
@@ -45,7 +45,7 @@ public class UserServiceTest {
     @Test
     void shouldCreateUser(){
         User user = userService.createUser(USER_NAME, EMAIL, PHONE, UserRole.MEMBER, LOGIN, PASSWORD);
-        assertEquals(user, userService.findById(user.getId()));
+        assertEquals(user, userService.findById(user.getId()).get());
     }
 
     @Test

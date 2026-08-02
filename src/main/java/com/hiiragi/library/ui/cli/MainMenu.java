@@ -1,5 +1,7 @@
 package com.hiiragi.library.ui.cli;
 
+import java.util.Optional;
+
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.service.BookService;
 import com.hiiragi.library.service.UserService;
@@ -20,12 +22,12 @@ public enum MainMenu implements Menu{
         System.out.println("Starting Library System...\n");
         while (true) {
             this.show();
-            User loggedUser = loginPrompt.login();
-            if (loggedUser == null) {
+            Optional<User> loggedUser = loginPrompt.login();
+            if (loggedUser.isEmpty()) {
                 return; // Exit application
             }
             
-            homeMenu = new HomeMenu(loggedUser, userService, bookService);
+            homeMenu = new HomeMenu(loggedUser.get(), userService, bookService);
             homeMenu.start();
         }
     }

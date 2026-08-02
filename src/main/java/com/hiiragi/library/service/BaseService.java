@@ -1,7 +1,9 @@
 package com.hiiragi.library.service;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.hiiragi.library.exceptions.NotFoundException;
 import com.hiiragi.library.model.BaseEntity;
 import com.hiiragi.library.repository.CrudRepository;
 
@@ -11,19 +13,18 @@ public abstract class BaseService<
 
     protected final R repository; 
 
-    public BaseService(R repository){
+    protected BaseService(R repository){
         this.repository = repository;
     }
 
-    public T add(T entity){
-        return this.repository.save(entity);
+    public void removeById(Long id){
+        boolean removed = this.repository.deleteById(id);
+        if (!removed) {
+            throw new NotFoundException("Failed to remove entity with id: " + id);
+        }
     }
 
-    public boolean removeById(Long id){
-        return this.repository.deleteById(id);
-    }
-
-    public T findById(Long id){
+    public Optional<T> findById(Long id){
         return this.repository.findById(id);
     }
 

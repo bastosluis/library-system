@@ -1,11 +1,12 @@
 package com.hiiragi.library.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CrudRepository<T> {
     T save(T entity);
 
-    T findById(Long id);
+    Optional<T> findById(Long id);
 
     boolean deleteById(Long id);
 

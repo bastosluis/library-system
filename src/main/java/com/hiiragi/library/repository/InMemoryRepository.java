@@ -2,6 +2,7 @@ package com.hiiragi.library.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.hiiragi.library.model.BaseEntity;
 
@@ -25,18 +26,20 @@ public abstract class InMemoryRepository<T extends BaseEntity>
     }
 
     @Override
-    public T findById(Long id) {
+    public Optional<T> findById(Long id) {
         for (T entity : entities) {
             if (entity.getId().equals(id)) {
-                return entity;
+                return Optional.of(entity);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
     public boolean deleteById(Long id){
-        return delete(findById(id));
+        return findById(id)
+                .map(this::delete)
+                .orElse(false);
     }
 
     @Override

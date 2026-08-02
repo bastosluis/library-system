@@ -1,8 +1,9 @@
 package com.hiiragi.library.repository;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ public class UserRepositoryTest {
     void shouldReturnUserWhenIdExists(){
         User user = createUser();
         userRepo.save(user);
-        assertEquals(user.getId(), userRepo.findById(user.getId()).getId());
+        assertEquals(user.getId(), userRepo.findById(user.getId()).get().getId());
     }
 
     @Test
@@ -80,9 +81,9 @@ public class UserRepositoryTest {
         for (int i = 0; i < 10; i++){
             userRepo.save(createUser());
         }
-        User user = userRepo.findById(5L);
+        User user = userRepo.findById(5L).get();
         userRepo.delete(user);
-        assertEquals(null, userRepo.findById(5L));
+        assertEquals(Optional.empty(), userRepo.findById(5L));
     }
     
     @Test
@@ -118,13 +119,13 @@ public class UserRepositoryTest {
         User user = createUser();
         userRepo.save(user);
         String name = user.getName();
-        assertEquals(user, userRepo.findByName(name));
+        assertEquals(user, userRepo.findByName(name).get());
     }
 
     @Test
     void shouldNotFindByName(){
         User user = createUser();
         userRepo.save(user);
-        assertNull(userRepo.findByName("should_not_exist"));
+        assertEquals(Optional.empty(), userRepo.findByName("should_not_exist"));
     }
 }

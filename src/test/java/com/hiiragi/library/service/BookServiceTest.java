@@ -28,7 +28,7 @@ public class BookServiceTest {
     void shouldAddBook(){
         Book book = createBook();
         bookService.add(book);
-        assertEquals(book, bookService.findById(book.getId()));
+        assertEquals(book, bookService.findById(book.getId()).get());
     }
 
     @Test
