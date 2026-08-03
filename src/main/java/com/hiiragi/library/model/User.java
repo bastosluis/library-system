@@ -108,4 +108,15 @@ public class User extends BaseEntity{
     public List<BookCopy> getBorrowedCopies(){
         return this.borrowedCopies;
     }
+
+    public void returnCopy(Long bookCopyId) {
+        BookCopy copy = this.borrowedCopies.getFirst();
+        int i = 0;
+        while(!copy.getId().equals(bookCopyId) || i < this.borrowedCopies.size() ){
+            copy = this.borrowedCopies.get(i);
+            i++;
+        }
+
+        copy._return();
+    }
 }

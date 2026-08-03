@@ -121,5 +121,4 @@ public class Book extends BaseEntity {
     public void removeCopy(BookCopy copy){
         this.copies.remove(copy);
     }
-    
 }

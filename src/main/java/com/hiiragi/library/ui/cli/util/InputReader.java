@@ -1,6 +1,7 @@
 package com.hiiragi.library.ui.cli.util;
 
 // Singleton Pattern
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public enum InputReader {
@@ -19,5 +20,13 @@ public enum InputReader {
         System.out.print(prompt);
 
         return Integer.parseInt(SCANNER.nextLine());
+    }
+    
+    public static LocalDate readDate(String prompt){
+
+        System.out.println(prompt);
+        System.out.println("Please insert in YYYY-MM-DD format.");
+        
+        return LocalDate.parse(SCANNER.nextLine());
     }
 }

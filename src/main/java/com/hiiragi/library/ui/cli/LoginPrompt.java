@@ -8,7 +8,7 @@ import com.hiiragi.library.ui.cli.util.InputReader;
 
 public class LoginPrompt{
 
-    private UserService userService;
+    private final UserService userService;
 
     public LoginPrompt(UserService userService){
         this.userService = userService;

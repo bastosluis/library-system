@@ -3,16 +3,14 @@ package com.hiiragi.library.ui.cli;
 import java.util.Optional;
 
 import com.hiiragi.library.model.User;
-import com.hiiragi.library.service.BookService;
-import com.hiiragi.library.service.UserService;
+import com.hiiragi.library.service.LibraryService;
 
 
 // Singleton Pattern
 public enum MainMenu implements Menu{
     INSTANCE;
 
-    private BookService bookService;
-    private UserService userService;
+    private LibraryService libraryService;
     private LoginPrompt loginPrompt;
     
     private HomeMenu homeMenu;
@@ -27,7 +25,7 @@ public enum MainMenu implements Menu{
                 return; // Exit application
             }
             
-            homeMenu = new HomeMenu(loggedUser.get(), userService, bookService);
+            homeMenu = new HomeMenu(loggedUser.get(), libraryService);
             homeMenu.start();
         }
     }
@@ -40,13 +38,13 @@ public enum MainMenu implements Menu{
     public void setLoginPrompt(LoginPrompt loginPrompt) {
         this.loginPrompt = loginPrompt;
     }
-    
-    public void setBookService(BookService bookService) {
-        this.bookService = bookService;
+
+    public LibraryService getLibraryService() {
+        return libraryService;
     }
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setLibraryService(LibraryService libraryService) {
+        this.libraryService = libraryService;
     }
 
 }

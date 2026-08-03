@@ -1,8 +1,11 @@
 package com.hiiragi.library;
 
 import com.hiiragi.library.repository.BookRepository;
+import com.hiiragi.library.repository.LoanRepository;
 import com.hiiragi.library.repository.UserRepository;
 import com.hiiragi.library.service.BookService;
+import com.hiiragi.library.service.LibraryService;
+import com.hiiragi.library.service.LoanService;
 import com.hiiragi.library.service.UserService;
 import com.hiiragi.library.ui.cli.LoginPrompt;
 import com.hiiragi.library.ui.cli.MainMenu;
@@ -17,11 +20,14 @@ public class App {
 
         BookRepository bookRepository = new BookRepository();
         UserRepository userRepository = new UserRepository();
-        UserService userService = new UserService(userRepository);
+        LoanRepository loanRepository = new LoanRepository();
 
-        MainMenu.INSTANCE.setLoginPrompt(new LoginPrompt(userService));
-        MainMenu.INSTANCE.setBookService(new BookService(bookRepository));
-        MainMenu.INSTANCE.setUserService(userService);
+        LibraryService libraryService = new LibraryService(new BookService(bookRepository), 
+                                                            new UserService(userRepository),
+                                                            new LoanService(loanRepository));
+
+        MainMenu.INSTANCE.setLibraryService(libraryService);
+        MainMenu.INSTANCE.setLoginPrompt(new LoginPrompt(libraryService.getUserService()));
         MainMenu.INSTANCE.start();
     }
 }

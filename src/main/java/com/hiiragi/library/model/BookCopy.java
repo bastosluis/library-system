@@ -37,4 +37,11 @@ public class BookCopy extends BaseEntity{
         }
         status = BookStatus.BORROWED;    
     }
+
+    public void _return() {
+        if (status!=BookStatus.BORROWED) {
+            throw new IllegalStateException("Copy is not borrowed");
+        }
+        status = BookStatus.AVAILABLE; 
+    }
 }

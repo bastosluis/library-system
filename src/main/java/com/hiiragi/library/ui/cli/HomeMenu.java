@@ -1,35 +1,29 @@
 package com.hiiragi.library.ui.cli;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import com.hiiragi.library.enums.UserRole;
+import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
+import com.hiiragi.library.exceptions.NotFoundException;
 import com.hiiragi.library.model.Book;
+import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.model.User;
-import com.hiiragi.library.service.BookService;
-import com.hiiragi.library.service.UserService;
+import com.hiiragi.library.service.LibraryService;
 import com.hiiragi.library.ui.cli.util.InputReader;
 
 public class HomeMenu implements Menu{
 
     private User user;
-    private UserService userService;
-    private BookService bookService;
+
+    private final LibraryService libraryService;
     
-    public HomeMenu(User user, UserService userService, BookService bookService) {
+    public HomeMenu(User user, LibraryService libraryService) {
         this.user = user;
-        this.userService = userService;
-        this.bookService = bookService;
+        this.libraryService = libraryService;
     }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public void setBookService(BookService bookService) {
-        this.bookService = bookService;
-    }
-
+    
     @Override
     public void start() {
 
@@ -63,8 +57,9 @@ public class HomeMenu implements Menu{
 
     private void handleBorrowBook() {
         String title = InputReader.readString("Book Title: \n");
+        LocalDate dueDate = InputReader.readDate("Due Date: \n"); 
         try {
-            bookService.borrowBook(title, this.user);
+            libraryService.borrowBook(title, this.user, dueDate);
             System.out.println("Successfully borrowed "+title+"!");
         } catch (RuntimeException e) {
             System.err.println(e.getMessage());
@@ -72,35 +67,51 @@ public class HomeMenu implements Menu{
     }
     
     private void handleReturnBook() {
-        // TODO: Loan service still not implemented
-        throw new UnsupportedOperationException("Loan service still not implemented.");
+        List<Loan> loans = libraryService.getLoanService().findByUserId(this.user.getId());
+        System.out.println("These are the books currently loaned:\n");
+
+        for (Loan loan : loans){
+            String title = libraryService.getBookService().findById(loan.getBookId()).get().getTitle();
+            System.out.println("- "+title+", Loan id: "+loan.getId()+
+                                        "\n * Due Date: "+loan.getDueDate()+
+                                        "\n * Loan Date: "+loan.getLoanDate()+
+                                        "\n * Status: "+loan.getStatus());
+        }
+        
+        Long id = Long.valueOf(InputReader.readInt("Type the id of the book you want to return: \n"));
+        try{
+            libraryService.returnBook(id);
+        }
+        catch (NotFoundException | LoanAlreadyReturnedException e){
+           System.err.println(e.getMessage());
+        }
     }
 
     private void handleListBooks() {
-        try {
-            List<Book> books = bookService.findAll();
+        List<Book> books = libraryService.getBookService().findAll();
+        if (books.isEmpty()){
+            System.out.println("No books available.\n");
+        }
+        else{
             System.out.println("There are currently these books in the library:\n");
             for (Book book : books) {
                 System.out.println("- "+book.getTitle()+"\n");
             }
-
-        } catch (RuntimeException e) {
-            System.err.println(e.getMessage());
         }
     }
 
     private void handleSearchBook() {
-            String title = InputReader.readString("Book Title: \n");
-            Optional<Book> foundBook = bookService.findByTitle(title);
+        String title = InputReader.readString("Book Title: \n");
+        Optional<Book> foundBook = libraryService.getBookService().findByTitle(title);
 
-            if (foundBook.isPresent()) {
-                System.out.println(
-                    "Found the book " +
-                    foundBook.get().getTitle()
-                );
-            } else {
-                System.out.println("Book not found.");
-            }
+        if (foundBook.isPresent()) {
+            System.out.println(
+                "Found the book " +
+                foundBook.get().getTitle()
+            );
+        } else {
+            System.out.println("Book not found.");
+        }
     }    
     
     @Override
