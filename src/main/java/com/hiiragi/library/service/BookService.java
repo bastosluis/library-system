@@ -50,7 +50,7 @@ public class BookService extends BaseService<Book, BookRepository> {
         BookCopy copy = optionalCopy.get();
         
         copy.borrow();
-        user.addBorrowedBookCopy(copy);
+        user.borrow(copy);
     }
 
     public Optional<Book> findByTitle(String title){

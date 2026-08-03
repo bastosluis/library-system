@@ -101,7 +101,7 @@ public class User extends BaseEntity{
         this.role = role;
     }
 
-    public void addBorrowedBookCopy(BookCopy copy){
+    public void borrow(BookCopy copy){
         this.borrowedCopies.add(copy);
     }
 

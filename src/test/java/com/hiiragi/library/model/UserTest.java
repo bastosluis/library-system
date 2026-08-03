@@ -34,11 +34,11 @@ public class UserTest {
     }
 
     @Test
-    void shouldAddBorrowedBookCopy(){
+    void shouldborrow(){
         User user = createUser();
         BookCopy copy = new BookCopy(1L, BookStatus.BORROWED);
 
-        user.addBorrowedBookCopy(copy);
+        user.borrow(copy);
 
         List<BookCopy> copyList = user.getBorrowedCopies();
         assertEquals(1L, copyList.get(0).getBookId());
