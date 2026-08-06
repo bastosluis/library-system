@@ -15,8 +15,14 @@ public abstract class InMemoryRepository<T extends BaseEntity>
 
     @Override
     public T save(T entity) {
-        entity.setId(nextId++);
-        entities.add(entity);
+        if (entity.getId() == null) {
+            entity.setId(nextId++);
+            entities.add(entity);
+        } else {
+            int index = entities.indexOf(entity);
+            entities.set(index, entity);
+        }
+
         return entity;
     }
     
