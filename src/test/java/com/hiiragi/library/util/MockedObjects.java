@@ -1,11 +1,13 @@
 package com.hiiragi.library.util;
 
+import java.time.LocalDate;
 import java.time.Year;
 
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.Author;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.Category;
+import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.model.User;
 import static com.hiiragi.library.util.MockedNames.AUTHOR_NAME;
 import static com.hiiragi.library.util.MockedNames.BOOK_DESCRIPTION;
@@ -14,8 +16,8 @@ import static com.hiiragi.library.util.MockedNames.CATEGORY_DESCRIPTION;
 import static com.hiiragi.library.util.MockedNames.CATEGORY_TITLE;
 import static com.hiiragi.library.util.MockedNames.EMAIL;
 import static com.hiiragi.library.util.MockedNames.ISBN;
-import static com.hiiragi.library.util.MockedNames.NATIONALITY;
 import static com.hiiragi.library.util.MockedNames.LOGIN;
+import static com.hiiragi.library.util.MockedNames.NATIONALITY;
 import static com.hiiragi.library.util.MockedNames.PASSWORD;
 import static com.hiiragi.library.util.MockedNames.PHONE;
 import static com.hiiragi.library.util.MockedNames.USER_NAME;
@@ -27,6 +29,8 @@ public final class MockedObjects {
     }
 
     public static final Year YEAR = Year.of(2026);
+    public static final LocalDate DUE_DATE = LocalDate.of(2026, 1, 1);
+
     public static Author createAuthor() {
         return new Author(AUTHOR_NAME, NATIONALITY);
     }
@@ -56,5 +60,9 @@ public final class MockedObjects {
             LOGIN,
             PASSWORD
             );
+    }
+    
+    public static Loan createLoan() {
+        return new Loan(1L, 2L, 3L, DUE_DATE);
     }
 }
