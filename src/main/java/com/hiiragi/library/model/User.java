@@ -110,13 +110,13 @@ public class User extends BaseEntity{
     }
 
     public void returnCopy(Long bookCopyId) {
-        BookCopy copy = this.borrowedCopies.getFirst();
-        int i = 0;
-        while(!copy.getId().equals(bookCopyId) || i < this.borrowedCopies.size() ){
-            copy = this.borrowedCopies.get(i);
-            i++;
+        for (BookCopy copy : borrowedCopies) {
+            if (copy.getId().equals(bookCopyId)) {
+                copy.returnCopy();
+                return;
+            }
         }
 
-        copy._return();
+        throw new IllegalArgumentException("Book copy not borrowed.");
     }
 }
