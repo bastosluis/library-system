@@ -1,7 +1,4 @@
 package com.hiiragi.library.model;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hiiragi.library.enums.UserRole;
 
 public class User extends BaseEntity{
@@ -11,27 +8,22 @@ public class User extends BaseEntity{
     private boolean isActive; // Whether they can use our library or not
     private int maxLoans; // How many they can borrow at the same time
     private UserRole role; //Admin, Librarian or Member
-    private ArrayList<BookCopy> borrowedCopies;
     private String login;
     private String password;
+    // private ArrayList<BookCopy> borrowedCopies;
 
     
-    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, ArrayList<BookCopy> borrowedCopies, String login, String password){
+    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, String login, String password){
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.isActive = isActive;
         this.maxLoans = maxLoans;
         this.role = role;
-        this.borrowedCopies = borrowedCopies;
         this.login = login;
         this.password = password;
     }
     
-    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, String login, String password){
-        this(name, email, phone, isActive, maxLoans, role, new ArrayList<>(), login, password);
-    }
-
     public String getLogin() {
         return login;
     }
@@ -99,24 +91,5 @@ public class User extends BaseEntity{
 
     public void setRole(UserRole role) {
         this.role = role;
-    }
-
-    public void borrow(BookCopy copy){
-        this.borrowedCopies.add(copy);
-    }
-
-    public List<BookCopy> getBorrowedCopies(){
-        return this.borrowedCopies;
-    }
-
-    public void returnCopy(Long bookCopyId) {
-        for (BookCopy copy : borrowedCopies) {
-            if (copy.getId().equals(bookCopyId)) {
-                copy.returnCopy();
-                return;
-            }
-        }
-
-        throw new IllegalArgumentException("Book copy not borrowed.");
     }
 }

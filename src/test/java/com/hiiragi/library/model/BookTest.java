@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
+import com.hiiragi.library.repository.BookRepository;
 import static com.hiiragi.library.util.MockedNames.BOOK_DESCRIPTION;
 import static com.hiiragi.library.util.MockedNames.BOOK_TITLE;
 import static com.hiiragi.library.util.MockedNames.ISBN;
@@ -49,6 +50,17 @@ public class BookTest {
         assertTrue(book.getCopies().contains(copy1), "addCopy method did not successfuly add a BookCopy object");
         book.removeCopy(copy1);
         assertTrue(!book.hasCopies(), "addCopy method did not successfuly remove a BookCopy object");
+    }
+
+    @Test
+    void shouldGetCopyById(){
+        BookRepository bookRepo = new BookRepository();
+        final Book book = createBook();
+        for (int i = 0; i < 10; i++){
+            bookRepo.save(book);
+        }
+        BookCopy foundCopy = book.getCopy(5L).get();
+        assertEquals(5L, foundCopy.getId());
     }
 }
 

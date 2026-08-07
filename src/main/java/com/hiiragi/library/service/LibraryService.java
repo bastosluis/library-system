@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.exceptions.BookNotFoundException;
+import com.hiiragi.library.exceptions.CopyNotFoundException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.LoanNotFoundException;
 import com.hiiragi.library.exceptions.NoAvailableCopiesException;
@@ -42,7 +43,6 @@ public class LibraryService {
         
 
         copy.borrow();
-        user.borrow(copy);
         loanService.add(new Loan(copy.getBookId(), copy.getId(), user.getId(), dueDate));
     }
 
@@ -53,12 +53,13 @@ public class LibraryService {
         if (loan.getStatus() == LoanStatus.RETURNED) {
             throw new LoanAlreadyReturnedException(loanId);
         }
+        Book book = bookService.findById(loan.getBookId())
+                    .orElseThrow(() -> new BookNotFoundException(loan.getBookId()));
+                
+        BookCopy copy = book.getCopy(loan.getBookCopyId())
+            .orElseThrow(() -> new CopyNotFoundException(loan.getBookCopyId()));
 
-        User user = userService.findById(loan.getUserId())
-                .orElseThrow(() -> new UserNotFoundException(loan.getUserId()));
-
-        user.returnCopy(loan.getBookCopyId());
-
+        copy.returnCopy();
         loan.markAsReturned(LocalDate.now());
     }
 

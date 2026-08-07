@@ -8,7 +8,9 @@ import com.hiiragi.library.model.BookCopy;
 
 public class BookRepository
         extends InMemoryRepository<Book> {
-
+    
+    protected Long copyNextId = 1L;
+    
     public Optional<Book> findByTitle(String title) {
         for (Book book : entities) {
             if (book.getTitle().equalsIgnoreCase(title)) {
@@ -20,20 +22,24 @@ public class BookRepository
 
     @Override
     public Book save(Book book){
+        super.save(book);
         addCopy(book);
-        return super.save(book);
+        return book;
     }
-
+    
     public Book save(Book book, BookStatus status){
+        super.save(book);
         addCopy(book, status);
-        return super.save(book);
-    }
-
-    public void addCopy(Book book){
-        book.addCopy(new BookCopy(nextId));
+        return book;
     }
 
     public void addCopy(Book book, BookStatus status){
-        book.addCopy(new BookCopy(nextId, status));
+        BookCopy copy = new BookCopy(book.getId(), status);
+        copy.setId(copyNextId++);
+        book.addCopy(copy);
+    }
+    
+    public void addCopy(Book book){
+        this.addCopy(book, BookStatus.AVAILABLE);
     }
 }

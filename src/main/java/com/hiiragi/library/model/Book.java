@@ -3,6 +3,8 @@ package com.hiiragi.library.model;
 // import java.lang.reflect.Array;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 public class Book extends BaseEntity {
     private String title;
@@ -104,6 +106,20 @@ public class Book extends BaseEntity {
 
     public ArrayList<BookCopy> getCopies() {
         return copies;
+    }
+
+    public Optional<BookCopy> getCopy(Long bookCopyId){
+        return copies.stream()
+            .filter(copy -> Objects.equals(bookCopyId, copy.getId()))
+            .findFirst();
+        // imperative version for comparison
+        // if (copies.isEmpty()) return Optional.empty();
+        // for (BookCopy copy : this.copies) {
+        //     if (copy.getId().equals(copy)){
+        //         return Optional.of(copy);
+        //     }
+        // }
+        // return Optional.empty();
     }
 
     public boolean hasCopies() {
