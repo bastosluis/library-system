@@ -16,6 +16,7 @@ public class BookRepositoryTest {
     private BookRepository bookRepo;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp(){
         bookRepo = new BookRepository();
     }
@@ -100,5 +101,15 @@ public class BookRepositoryTest {
         bookRepo.save(book);
         bookRepo.deleteById(book.getId());
         assertEquals(0, bookRepo.findAll().size());
+    }
+
+    @Test
+    void shouldAddCopy(){
+        //TODO
+    }
+
+    @Test
+    void shouldAddMultipleCopies(){
+        //TODO
     }
 }

@@ -14,6 +14,7 @@ public class LoanRepositoryTest {
     private LoanRepository loanRepo; 
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp(){
         loanRepo = new LoanRepository();
     }

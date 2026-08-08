@@ -13,6 +13,7 @@ public class LoanServiceTest {
         private LoanService loanService;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp(){
         loanRepo = new LoanRepository();
         loanService = new LoanService(loanRepo);
@@ -31,7 +32,7 @@ public class LoanServiceTest {
         Loan loan = createLoan();
         loanService.add(loan);
         loanService.removeById(loan.getId());
-        
+
         assertTrue(loanService.findAll().isEmpty());
     }
 }

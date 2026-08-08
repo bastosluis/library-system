@@ -14,6 +14,7 @@ public class BookServiceTest {
         private BookService bookService;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp(){
         bookRepo = new BookRepository();
         bookService = new BookService(bookRepo);

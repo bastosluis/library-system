@@ -22,6 +22,7 @@ public class UserServiceTest {
         private UserService userService;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp(){
         userRepo = new UserRepository();
         userService = new UserService(userRepo);

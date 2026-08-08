@@ -19,6 +19,7 @@ public class UserRepositoryTest {
     private UserRepository userRepo;
 
     @BeforeEach
+    @SuppressWarnings("unused")
     void setUp(){
         userRepo = new UserRepository();
     }
