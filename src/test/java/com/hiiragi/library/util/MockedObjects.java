@@ -39,10 +39,10 @@ public final class MockedObjects {
         return new Category(CATEGORY_TITLE, CATEGORY_DESCRIPTION);
     }
 
-    public static Book createBook() {
+    public static Book createBook(String bookTitle, String isbn) {
         return new Book(
-            BOOK_TITLE,
-            ISBN,
+            bookTitle,
+            isbn,
             BOOK_DESCRIPTION,
             Year.of(2026),
             createAuthor(),
@@ -50,16 +50,24 @@ public final class MockedObjects {
         );
     }
 
-    public static User createUser() {
+    public static Book createBook(){
+        return createBook(BOOK_TITLE, ISBN);
+    }
+
+    public static User createUser(String login, String email) {
         return new User(USER_NAME,
-            EMAIL,
+            email,
             PHONE,
             true,
             1,
             UserRole.MEMBER,
-            LOGIN,
+            login,
             PASSWORD
             );
+    }
+
+    public static User createUser(){
+        return createUser(LOGIN, EMAIL);
     }
     
     public static Loan createLoan() {

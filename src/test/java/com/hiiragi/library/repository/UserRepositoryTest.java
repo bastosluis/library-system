@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.hiiragi.library.model.User;
+import static com.hiiragi.library.util.MockedNames.EMAIL;
+import static com.hiiragi.library.util.MockedNames.USER_NAME;
 import static com.hiiragi.library.util.MockedObjects.createUser;
 /*
 Very similar to BookRepositoryTest.
@@ -36,6 +38,8 @@ public class UserRepositoryTest {
     void shouldSaveMultipleUsers(){
         User user1 = createUser();
         User user2 = createUser();
+        user2.setEmail("different email");
+        user2.setLogin("different login");
         userRepo.save(user2);
         userRepo.save(user1);
         assertEquals(2, userRepo.findAll().size());    
@@ -80,7 +84,7 @@ public class UserRepositoryTest {
     @Test
     void shouldDeleteOnlySpecifiedUser(){
         for (int i = 0; i < 10; i++){
-            userRepo.save(createUser());
+            userRepo.save(createUser(USER_NAME+" "+i, EMAIL+" "+i));    
         }
         User user = userRepo.findById(5L).get();
         userRepo.delete(user);

@@ -4,11 +4,15 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.hiiragi.library.exceptions.DuplicateBookException;
 import com.hiiragi.library.model.Book;
+import static com.hiiragi.library.util.MockedNames.BOOK_TITLE;
+import static com.hiiragi.library.util.MockedNames.ISBN;
 import static com.hiiragi.library.util.MockedObjects.createBook;
 
 public class BookRepositoryTest {
@@ -31,9 +35,18 @@ public class BookRepositoryTest {
     }
 
     @Test
+    void shouldNotSaveDuplicateBook(){
+        Book book = createBook();
+        bookRepo.save(book);
+        assertThrows(DuplicateBookException.class, () -> bookRepo.save(book));
+    }
+
+    @Test
     void shouldSaveMultipleBooks(){
         Book book1 = createBook();
         Book book2 = createBook();
+        book2.setTitle("different title");
+        book2.setIsbn("different isbn");
         bookRepo.save(book1);
         bookRepo.save(book2);
         assertEquals(2, bookRepo.findAll().size());    
@@ -81,7 +94,7 @@ public class BookRepositoryTest {
     @Test
     void shouldDeleteOnlySpecifiedBook(){
         for (int i = 0; i < 10; i++){
-            bookRepo.save(createBook());
+            bookRepo.save(createBook(BOOK_TITLE+" "+i, ISBN+" "+i));
         }
         Book book = bookRepo.findById(5L).get();
         bookRepo.delete(book);
@@ -105,11 +118,19 @@ public class BookRepositoryTest {
 
     @Test
     void shouldAddCopy(){
-        //TODO
+        Book book = createBook();
+        bookRepo.save(book);
+        bookRepo.addCopy(book);
+        assertEquals(2, book.getCopies().size());
     }
 
     @Test
     void shouldAddMultipleCopies(){
-        //TODO
+        Book book = createBook();
+        bookRepo.save(book);
+        for (int i = 0; i < 9; i++) {
+            bookRepo.addCopy(book);
+        }
+        assertEquals(10, book.getCopies().size());
     }
 }

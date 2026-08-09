@@ -56,8 +56,9 @@ public class BookTest {
     void shouldGetCopyById(){
         BookRepository bookRepo = new BookRepository();
         final Book book = createBook();
+        bookRepo.save(book);
         for (int i = 0; i < 10; i++){
-            bookRepo.save(book);
+            bookRepo.addCopy(book);
         }
         BookCopy foundCopy = book.getCopy(5L).get();
         assertEquals(5L, foundCopy.getId());
