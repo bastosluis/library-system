@@ -9,7 +9,6 @@ import com.hiiragi.library.exceptions.CopyNotFoundException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.LoanNotFoundException;
 import com.hiiragi.library.exceptions.NoAvailableCopiesException;
-import com.hiiragi.library.exceptions.UserNotFoundException;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.BookCopy;
 import com.hiiragi.library.model.Loan;
@@ -46,7 +45,7 @@ public class LibraryService {
         loanService.add(new Loan(copy.getBookId(), copy.getId(), user.getId(), dueDate));
     }
 
-    public void returnBook(Long loanId) throws LoanNotFoundException, UserNotFoundException, LoanAlreadyReturnedException{
+    public void returnBook(Long loanId) throws LoanNotFoundException, BookNotFoundException, LoanAlreadyReturnedException, CopyNotFoundException{
         Loan loan = loanService.findById(loanId)
                 .orElseThrow(() -> new LoanNotFoundException(loanId));
 
