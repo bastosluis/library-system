@@ -1,5 +1,7 @@
 package com.hiiragi.library.model;
 import com.hiiragi.library.enums.UserRole;
+import com.hiiragi.library.exceptions.LoanLimitExceededExcetion;
+import com.hiiragi.library.exceptions.NegativeLoanAmountException;
 
 public class User extends BaseEntity{
     private String name;
@@ -7,6 +9,7 @@ public class User extends BaseEntity{
     private String phone;
     private boolean isActive; // Whether they can use our library or not
     private int maxLoans; // How many they can borrow at the same time
+    private int loans = 0;
     private UserRole role; //Admin, Librarian or Member
     private String login;
     private String password;
@@ -79,6 +82,24 @@ public class User extends BaseEntity{
 
     public int getMaxLoans() {
         return maxLoans;
+    }
+
+    public int getAmountOfLoans() {
+        return loans;
+    }
+
+    public void increaseLoan() {
+        if (loans+1 > maxLoans){
+            throw new LoanLimitExceededExcetion("User "+login+" has exceeded their limit of "+maxLoans+" loans.");
+        }
+        loans++;
+    }
+
+    public void decreaseLoan(){
+        if (loans-1 < 0){
+            throw new NegativeLoanAmountException("User "+login+" has 0 loans.");
+        }
+        loans--;
     }
 
     public void setMaxLoans(int maxLoans) {
