@@ -19,14 +19,19 @@ public class LibraryService {
     private final BookService bookService;
     private final UserService userService;
     private final LoanService loanService;
-
-    public LibraryService(BookService bookService, UserService userService, LoanService loanService) {
+    private final AuthorizationService authorizationService;
+    
+    public LibraryService(BookService bookService, UserService userService, LoanService loanService, AuthorizationService authorizationService) {
         this.bookService = bookService;
         this.userService = userService;
         this.loanService = loanService;
+        this.authorizationService = authorizationService;
     }
 
     public void borrowBook(String title, User user, LocalDate dueDate) {
+        authorizationService.requireActive();
+        authorizationService.requireLoanUnderLimit();
+
         Optional<Book> book = bookService.findByTitle(title);
 
         if (book.isEmpty()) {
@@ -48,6 +53,8 @@ public class LibraryService {
     }
 
     public void returnBook(Long loanId) throws LoanNotFoundException, BookNotFoundException, LoanAlreadyReturnedException, CopyNotFoundException{
+        authorizationService.requireActive();
+
         Loan loan = loanService.findById(loanId)
                 .orElseThrow(() -> new LoanNotFoundException(loanId));
 

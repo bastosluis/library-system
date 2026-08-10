@@ -3,15 +3,22 @@ package com.hiiragi.library.service;
 import java.util.Optional;
 
 import com.hiiragi.library.enums.UserRole;
+import com.hiiragi.library.exceptions.AdminRoleChangeException;
+import com.hiiragi.library.exceptions.UserNotFoundException;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.UserRepository;
 
 public class UserService extends BaseService<User, UserRepository>{
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PHONE_REGEX = "\\d{8,15}";
+    private AuthorizationService authorizationService;
 
     public UserService(UserRepository userRepository){
         super(userRepository);
+    }
+
+    public void setAuthorizationService(AuthorizationService authorizationService){
+        this.authorizationService = authorizationService;
     }
 
     public Optional<User> add(User user){
@@ -20,6 +27,12 @@ public class UserService extends BaseService<User, UserRepository>{
             return Optional.empty();
         }
         return Optional.of(this.repository.save(user));
+    }
+
+    @Override
+    public void removeById(Long id){
+        authorizationService.requireRole(UserRole.ADMIN, UserRole.LIBRARIAN);
+        super.removeById(id);
     }
 
     public User createUser(String name, String email, String phone, UserRole role, String login, String password){
@@ -54,13 +67,28 @@ public class UserService extends BaseService<User, UserRepository>{
         return optionalUser;
     }
 
-    public boolean deactivate(Long id){
-        Optional<User> user = repository.findById(id);
-        if(user.isEmpty()){
-            return false;
+    public void deactivate(Long id){
+        authorizationService.requireRole(UserRole.ADMIN, UserRole.LIBRARIAN);
+
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        user.setActive(false);
+    }
+
+    public void activate(Long id){
+        authorizationService.requireRole(UserRole.ADMIN, UserRole.LIBRARIAN);
+
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        user.setActive(true);
+    }
+
+    public void changeRole(Long id, UserRole role){
+        authorizationService.requireRole(UserRole.ADMIN);
+        
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        if (user.getRole() == UserRole.ADMIN){
+            throw new AdminRoleChangeException(user.getLogin()+" is an admin.");
         }
-        user.get().setActive(false);
-        return true;
+        user.setRole(role);
     }
 
     // Validation Services
