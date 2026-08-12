@@ -33,4 +33,12 @@ public class AuthorizationService {
             throw new LoanLimitExceededExcetion("User "+user.getLogin()+" has exceeded their limit of "+user.getMaxLoans()+" loans.");
         }
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

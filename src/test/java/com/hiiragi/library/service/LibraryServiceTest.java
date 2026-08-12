@@ -29,9 +29,9 @@ public class LibraryServiceTest {
         private UserService userService;
         private BookService bookService;
         private LoanService LoanService;
-
+        private AuthorizationService authorizationService; 
         private LibraryService libraryService;
-
+        private User loggedUser;
 
     @BeforeEach
     @SuppressWarnings("unused")
@@ -42,13 +42,14 @@ public class LibraryServiceTest {
         userService = new UserService(userRepo);
         bookService = new BookService(bookRepo);
         LoanService = new LoanService(loanRepo);
-        libraryService = new LibraryService(bookService, userService, LoanService);
+        loggedUser = createUser();
+        userService.add(loggedUser);
+        authorizationService = new AuthorizationService(loggedUser);
+        libraryService = new LibraryService(bookService, userService, LoanService, authorizationService);
     }
 
     void seedLibraryService(){
-        User user = createUser();
         Book book = createBook();
-        libraryService.getUserService().add(user);
         libraryService.getBookService().add(book);
     }
 

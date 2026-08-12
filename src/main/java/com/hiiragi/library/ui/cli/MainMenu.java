@@ -3,7 +3,14 @@ package com.hiiragi.library.ui.cli;
 import java.util.Optional;
 
 import com.hiiragi.library.model.User;
+import com.hiiragi.library.repository.BookRepository;
+import com.hiiragi.library.repository.LoanRepository;
+import com.hiiragi.library.repository.UserRepository;
+import com.hiiragi.library.service.AuthorizationService;
+import com.hiiragi.library.service.BookService;
 import com.hiiragi.library.service.LibraryService;
+import com.hiiragi.library.service.LoanService;
+import com.hiiragi.library.service.UserService;
 
 
 // Singleton Pattern
@@ -18,14 +25,32 @@ public enum MainMenu implements Menu{
     @Override
     public void start(){
         System.out.println("Starting Library System...\n");
+
+        BookRepository bookRepository = new BookRepository();
+        UserRepository userRepository = new UserRepository();
+        LoanRepository loanRepository = new LoanRepository();
+
+        UserService userService = new UserService(userRepository);
+
+        loginPrompt = new LoginPrompt(userService);
+
         while (true) {
             this.show();
             Optional<User> loggedUser = loginPrompt.login();
             if (loggedUser.isEmpty()) {
                 return; // Exit application
             }
-            
-            homeMenu = new HomeMenu(loggedUser.get(), libraryService);
+
+            User user = loggedUser.get();
+
+            libraryService = new LibraryService(
+                                                    new BookService(bookRepository), 
+                                                    userService,
+                                                    new LoanService(loanRepository),
+                                                    new AuthorizationService(user)
+                                                );
+                                                
+            homeMenu = new HomeMenu(user, libraryService);
             homeMenu.start();
         }
     }
