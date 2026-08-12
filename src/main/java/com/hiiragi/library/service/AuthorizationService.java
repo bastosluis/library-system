@@ -33,7 +33,7 @@ public class AuthorizationService {
 
     public void requireLoanUnderLimit(){
         User user = session.getCurrentUser().orElseThrow(() -> new EmptySessionException());
-        if (user.getMaxLoans() < user.getAmountOfLoans()){
+        if (user.getMaxLoans() <= user.getAmountOfLoans()){
             throw new LoanLimitExceededExcetion("User "+user.getLogin()+" has exceeded their limit of "+user.getMaxLoans()+" loans.");
         }
     }

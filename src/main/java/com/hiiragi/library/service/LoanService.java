@@ -11,12 +11,9 @@ public class LoanService extends BaseService<Loan, LoanRepository>{
 
     private AuthorizationService authorizationService;
     
-    public LoanService(LoanRepository repository) {
-        super(repository);
-    }
-
-    public void setAuthorizationService(AuthorizationService authorizationService){
+    public LoanService(LoanRepository repository, AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
+        super(repository);
     }
 
     public Loan add(Loan loan){
@@ -41,5 +38,13 @@ public class LoanService extends BaseService<Loan, LoanRepository>{
 
     public List<Loan> findByStatus(LoanStatus status){
         return this.repository.findByStatus(status);
+    }
+
+    public AuthorizationService getAuthorizationService() {
+        return authorizationService;
+    }
+
+    public void setAuthorizationService(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 }

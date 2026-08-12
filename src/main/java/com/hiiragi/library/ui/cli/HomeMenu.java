@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.hiiragi.library.application.Session;
 import com.hiiragi.library.enums.UserRole;
+import com.hiiragi.library.exceptions.EmptySessionException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.NotFoundException;
 import com.hiiragi.library.model.Book;
@@ -12,15 +14,13 @@ import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.service.LibraryService;
 import com.hiiragi.library.ui.cli.util.InputReader;
-
 public class HomeMenu implements Menu{
 
-    private User user;
-
+    private final Session session;
     private final LibraryService libraryService;
     
-    public HomeMenu(User user, LibraryService libraryService) {
-        this.user = user;
+    public HomeMenu(Session session, LibraryService libraryService) {
+        this.session = session;
         this.libraryService = libraryService;
     }
     
@@ -40,6 +40,7 @@ public class HomeMenu implements Menu{
                     case 4 -> handleSearchBook();
                     case 5 -> {
                         System.out.println("Logging out...");
+                        session.logout();
                         return; // logout
                     }
                     case 0 -> System.exit(0);
@@ -59,7 +60,7 @@ public class HomeMenu implements Menu{
         String title = InputReader.readString("Book Title: \n");
         LocalDate dueDate = InputReader.readDate("Due Date: \n"); 
         try {
-            libraryService.borrowBook(title, this.user, dueDate);
+            libraryService.borrowBook(title, this.session.getCurrentUser().get(), dueDate);
             System.out.println("Successfully borrowed "+title+"!");
         } catch (RuntimeException e) {
             System.err.println(e.getMessage());
@@ -67,7 +68,7 @@ public class HomeMenu implements Menu{
     }
     
     private void handleReturnBook() {
-        List<Loan> loans = libraryService.getLoanService().findByUserId(this.user.getId());
+        List<Loan> loans = libraryService.getLoanService().findByUserId(this.session.getCurrentUser().get().getId());
         System.out.println("These are the books currently loaned:\n");
 
         for (Loan loan : loans){
@@ -116,6 +117,7 @@ public class HomeMenu implements Menu{
     
     @Override
     public void show() {
+        User user = this.session.getCurrentUser().orElseThrow(() -> new EmptySessionException("Current session has no user logged in."));
         System.out.println("\n===============\n");
         System.out.println("Welcome, " + user.getName() + "!\n");
         System.out.println("Please choose one of the following options (type the according number):\n");
@@ -133,9 +135,4 @@ public class HomeMenu implements Menu{
                 }
         System.out.println("\n===============\n");
     }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
 }

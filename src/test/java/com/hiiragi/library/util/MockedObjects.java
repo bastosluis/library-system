@@ -3,6 +3,7 @@ package com.hiiragi.library.util;
 import java.time.LocalDate;
 import java.time.Year;
 
+import com.hiiragi.library.application.Session;
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.Author;
 import com.hiiragi.library.model.Book;
@@ -54,22 +55,35 @@ public final class MockedObjects {
         return createBook(BOOK_TITLE, ISBN);
     }
 
-    public static User createUser(String login, String email) {
+    public static User createUser(String login, String email, UserRole userRole) {
         return new User(USER_NAME,
             email,
             PHONE,
             true,
             1,
-            UserRole.MEMBER,
+            userRole,
             login,
             PASSWORD
             );
     }
+    public static User createUser(String login, String email){
+        return createUser(login, email, UserRole.MEMBER);
+    }
+
+    public static User createUser(UserRole role){
+        return createUser(LOGIN, EMAIL, role);
+    }
 
     public static User createUser(){
-        return createUser(LOGIN, EMAIL);
+        return createUser(UserRole.MEMBER);
     }
     
+    public static Session createSession(UserRole role){
+        Session session = new Session();
+        session.login(createUser(role));
+        return session;
+    }
+
     public static Loan createLoan() {
         return new Loan(1L, 2L, 3L, DUE_DATE);
     }

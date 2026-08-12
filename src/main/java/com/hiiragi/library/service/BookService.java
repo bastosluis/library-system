@@ -12,12 +12,9 @@ public class BookService extends BaseService<Book, BookRepository> {
     
     private AuthorizationService authorizationService;
     
-    public BookService(BookRepository bookRepository){
-        super(bookRepository);
-    }
-    
-    public void setAuthorizationService(AuthorizationService authorizationService){
+    public BookService(BookRepository bookRepository, AuthorizationService authorizationService){
         this.authorizationService = authorizationService;
+        super(bookRepository);
     }
 
     public Book add(Book book, BookStatus status){
@@ -51,5 +48,13 @@ public class BookService extends BaseService<Book, BookRepository> {
                 return Optional.of(copy);
         }
         return Optional.empty();
+    }
+    
+    public void setAuthorizationService(AuthorizationService authorizationService){
+        this.authorizationService = authorizationService;
+    }
+
+    public AuthorizationService getAuthorizationService() {
+        return authorizationService;
     }
 }

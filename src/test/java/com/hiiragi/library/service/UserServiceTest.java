@@ -15,17 +15,24 @@ import static com.hiiragi.library.util.MockedNames.LOGIN;
 import static com.hiiragi.library.util.MockedNames.PASSWORD;
 import static com.hiiragi.library.util.MockedNames.PHONE;
 import static com.hiiragi.library.util.MockedNames.USER_NAME;
+import static com.hiiragi.library.util.MockedObjects.createSession;
 import static com.hiiragi.library.util.MockedObjects.createUser;
 
 public class UserServiceTest {
         private UserRepository userRepo;
         private UserService userService;
+        private AuthorizationService authorizationService;
 
     @BeforeEach
     @SuppressWarnings("unused")
     void setUp(){
         userRepo = new UserRepository();
-        userService = new UserService(userRepo);
+        authorizationService = new AuthorizationService(createSession(UserRole.MEMBER));
+        userService = new UserService(userRepo, authorizationService);
+    }
+
+    void changeSessionToAdmin(){
+        authorizationService.setSession(createSession(UserRole.ADMIN));
     }
 
     @Test
@@ -37,6 +44,7 @@ public class UserServiceTest {
     
     @Test
     void shouldDeactivateUser(){
+        changeSessionToAdmin();
         User user = createUser();
         userService.add(user);
         assertDoesNotThrow(() -> userService.deactivate(user.getId()));

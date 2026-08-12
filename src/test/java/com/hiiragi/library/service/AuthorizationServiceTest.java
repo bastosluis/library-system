@@ -22,7 +22,7 @@ public class AuthorizationServiceTest {
     @SuppressWarnings("unused")
     void setUp(){
         session = new Session();
-        User user = createUser();
+        user = createUser();
         session.login(user);
         authorizationService = new AuthorizationService(session);
     }
@@ -55,7 +55,7 @@ public class AuthorizationServiceTest {
 
     @Test
     void shouldNotAcceptLoansOverLimit(){
-        user.decreaseLoan();
+        user.setMaxLoans(0);
         assertThrows(LoanLimitExceededExcetion.class, () -> authorizationService.requireLoanUnderLimit());
     }
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.hiiragi.library.enums.BookStatus;
+import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.BookNotFoundException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.LoanNotFoundException;
@@ -20,7 +21,7 @@ import com.hiiragi.library.repository.LoanRepository;
 import com.hiiragi.library.repository.UserRepository;
 import static com.hiiragi.library.util.MockedObjects.DUE_DATE;
 import static com.hiiragi.library.util.MockedObjects.createBook;
-import static com.hiiragi.library.util.MockedObjects.createUser;
+import static com.hiiragi.library.util.MockedObjects.createSession;
 
 public class LibraryServiceTest {
         private UserRepository userRepo;
@@ -31,7 +32,6 @@ public class LibraryServiceTest {
         private LoanService LoanService;
         private AuthorizationService authorizationService; 
         private LibraryService libraryService;
-        private User loggedUser;
 
     @BeforeEach
     @SuppressWarnings("unused")
@@ -39,25 +39,25 @@ public class LibraryServiceTest {
         userRepo = new UserRepository();
         bookRepo = new BookRepository();
         loanRepo = new LoanRepository();
-        userService = new UserService(userRepo);
-        bookService = new BookService(bookRepo);
-        LoanService = new LoanService(loanRepo);
-        loggedUser = createUser();
-        userService.add(loggedUser);
-        authorizationService = new AuthorizationService(loggedUser);
+        authorizationService = new AuthorizationService(createSession(UserRole.MEMBER));
+        userRepo.save(authorizationService.getSession().getCurrentUser().get());
+        userService = new UserService(userRepo, authorizationService);
+        bookService = new BookService(bookRepo, authorizationService);
+        LoanService = new LoanService(loanRepo, authorizationService);
+
         libraryService = new LibraryService(bookService, userService, LoanService, authorizationService);
     }
 
-    void seedLibraryService(){
+    void seedBookRepo(){
         Book book = createBook();
-        libraryService.getBookService().add(book);
+        bookRepo.save(book);
     }
 
     @Test
     void shouldBorrowBook(){
-        seedLibraryService();
+        seedBookRepo();
         Book book = libraryService.getBookService().findAll().getFirst();
-        User user = libraryService.getUserService().findAll().getFirst();
+        User user = authorizationService.getSession().getCurrentUser().orElseThrow();
         libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
 
         assertEquals(BookStatus.BORROWED, book.getCopies().getFirst().getStatus());
@@ -66,9 +66,10 @@ public class LibraryServiceTest {
 
     @Test
     void shouldNotBorrowBook(){
-        seedLibraryService();
+        seedBookRepo();
         Book book = libraryService.getBookService().findAll().getFirst();
-        User user = libraryService.getUserService().findAll().getFirst();
+        User user = authorizationService.getSession().getCurrentUser().orElseThrow();
+        user.setMaxLoans(2);
         libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
         
         assertThrows(NoAvailableCopiesException.class, () -> libraryService.borrowBook(book.getTitle(), user, DUE_DATE));
@@ -76,9 +77,9 @@ public class LibraryServiceTest {
 
     @Test
     void shouldReturnBook(){
-        seedLibraryService();
+        seedBookRepo();
         Book book = libraryService.getBookService().findAll().getFirst();
-        User user = libraryService.getUserService().findAll().getFirst();
+        User user = authorizationService.getSession().getCurrentUser().orElseThrow();
         libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
         Long loanId = libraryService.getLoanService().findAll().getFirst().getId();
         
@@ -92,9 +93,9 @@ public class LibraryServiceTest {
 
     @Test
     void shouldNotReturnBookTwice(){
-        seedLibraryService();
+        seedBookRepo();
         Book book = libraryService.getBookService().findAll().getFirst();
-        User user = libraryService.getUserService().findAll().getFirst();
+        User user = authorizationService.getSession().getCurrentUser().orElseThrow();
         libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
         Long loanId = libraryService.getLoanService().findAll().getFirst().getId();
         try {
@@ -108,13 +109,13 @@ public class LibraryServiceTest {
 
     @Test
     void shouldNotReturnInexistentBook(){
-        seedLibraryService();
+        seedBookRepo();
         Book book = libraryService.getBookService().findAll().getFirst();
-        User user = libraryService.getUserService().findAll().getFirst();
+        User user = authorizationService.getSession().getCurrentUser().orElseThrow();
         libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
         Long loanId = libraryService.getLoanService().findAll().getFirst().getId();
         
-        libraryService.getBookService().removeById(book.getId());
+        bookRepo.delete(book);
 
         assertThrows(BookNotFoundException.class,  () -> libraryService.returnBook(loanId));
     }

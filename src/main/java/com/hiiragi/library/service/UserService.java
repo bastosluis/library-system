@@ -13,12 +13,9 @@ public class UserService extends BaseService<User, UserRepository>{
     private static final String PHONE_REGEX = "\\d{8,15}";
     private AuthorizationService authorizationService;
 
-    public UserService(UserRepository userRepository){
-        super(userRepository);
-    }
-
-    public void setAuthorizationService(AuthorizationService authorizationService){
+    public UserService(UserRepository userRepository, AuthorizationService authorizationService){
         this.authorizationService = authorizationService;
+        super(userRepository);
     }
 
     public Optional<User> add(User user){
@@ -97,5 +94,13 @@ public class UserService extends BaseService<User, UserRepository>{
     }
     private boolean isValidPhone(String phone){
         return phone != null && phone.matches(PHONE_REGEX);
+    }
+
+    public AuthorizationService getAuthorizationService() {
+        return authorizationService;
+    }
+
+    public void setAuthorizationService(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 }

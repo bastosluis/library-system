@@ -2,6 +2,7 @@ package com.hiiragi.library.ui.cli;
 
 import java.util.Optional;
 
+import com.hiiragi.library.application.Session;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.BookRepository;
 import com.hiiragi.library.repository.LoanRepository;
@@ -25,12 +26,14 @@ public enum MainMenu implements Menu{
     @Override
     public void start(){
         System.out.println("Starting Library System...\n");
-
+        Session session = new Session();
         BookRepository bookRepository = new BookRepository();
         UserRepository userRepository = new UserRepository();
-        LoanRepository loanRepository = new LoanRepository();
+        LoanRepository loanRepository = new LoanRepository();  
 
-        UserService userService = new UserService(userRepository);
+        AuthorizationService authorizationService = new AuthorizationService(session);
+
+        UserService userService = new UserService(userRepository, authorizationService);
 
         loginPrompt = new LoginPrompt(userService);
 
@@ -41,16 +44,16 @@ public enum MainMenu implements Menu{
                 return; // Exit application
             }
 
-            User user = loggedUser.get();
+            session.login(loggedUser.get());
 
             libraryService = new LibraryService(
-                                                    new BookService(bookRepository), 
+                                                    new BookService(bookRepository, authorizationService), 
                                                     userService,
-                                                    new LoanService(loanRepository),
-                                                    new AuthorizationService(user)
+                                                    new LoanService(loanRepository, authorizationService),
+                                                    authorizationService
                                                 );
                                                 
-            homeMenu = new HomeMenu(user, libraryService);
+            homeMenu = new HomeMenu(session, libraryService);
             homeMenu.start();
         }
     }
