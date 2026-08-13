@@ -12,6 +12,7 @@ import com.hiiragi.library.service.BookService;
 import com.hiiragi.library.service.LibraryService;
 import com.hiiragi.library.service.LoanService;
 import com.hiiragi.library.service.UserService;
+import com.hiiragi.library.util.DataSeeder;
 
 
 // Singleton Pattern
@@ -25,12 +26,15 @@ public enum MainMenu implements Menu{
     
     @Override
     public void start(){
+
         System.out.println("Starting Library System...\n");
         Session session = new Session();
         BookRepository bookRepository = new BookRepository();
         UserRepository userRepository = new UserRepository();
         LoanRepository loanRepository = new LoanRepository();  
-
+        
+        seedData(bookRepository, userRepository);
+        
         AuthorizationService authorizationService = new AuthorizationService(session);
 
         UserService userService = new UserService(userRepository, authorizationService);
@@ -61,6 +65,11 @@ public enum MainMenu implements Menu{
     @Override
     public void show() {
         System.out.println("Welcome to Hiiragi Library System!\n");
+    }
+
+    private void seedData(BookRepository bookRepository, UserRepository userRepository){
+        DataSeeder seeder = new DataSeeder(bookRepository, userRepository);
+        seeder.seed();
     }
     
     public void setLoginPrompt(LoginPrompt loginPrompt) {

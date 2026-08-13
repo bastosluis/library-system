@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Book extends BaseEntity {
     private String title;
     private String isbn;
@@ -32,12 +35,14 @@ public class Book extends BaseEntity {
         this.copies = copies;
     }
 
-    public Book(String title,
-                String isbn,
-                String description,
-                Year publicationYear,
-                Author author,
-                Category category){
+    @JsonCreator
+    public Book(
+        @JsonProperty("title") String title,
+        @JsonProperty("isbn") String isbn,
+        @JsonProperty("description") String description,
+        @JsonProperty("year") Year publicationYear,
+        @JsonProperty("author") Author author,
+        @JsonProperty("category") Category category){
                 
         this(title, isbn, description, publicationYear, author, category, new ArrayList<>());
     }

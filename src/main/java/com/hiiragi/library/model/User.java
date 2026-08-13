@@ -1,4 +1,6 @@
 package com.hiiragi.library.model;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.LoanLimitExceededExcetion;
 import com.hiiragi.library.exceptions.NegativeLoanAmountException;
@@ -13,10 +15,18 @@ public class User extends BaseEntity{
     private UserRole role; //Admin, Librarian or Member
     private String login;
     private String password;
-    // private ArrayList<BookCopy> borrowedCopies;
 
     
-    public User(String name, String email, String phone, boolean isActive, int maxLoans, UserRole role, String login, String password){
+    @JsonCreator
+    public User(
+            @JsonProperty("name") String name,
+            @JsonProperty("email") String email,
+            @JsonProperty("phone") String phone,
+            @JsonProperty("isActive") boolean isActive,
+            @JsonProperty("maxLoans") int maxLoans,
+            @JsonProperty("role") UserRole role,
+            @JsonProperty("login") String login,
+            @JsonProperty("password") String password) {
         this.name = name;
         this.email = email;
         this.phone = phone;
