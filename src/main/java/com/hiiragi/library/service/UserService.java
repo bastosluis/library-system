@@ -24,6 +24,10 @@ public class UserService extends BaseService<User, UserRepository>{
         return Optional.of(this.repository.save(user));
     }
 
+    public Optional<User> findByLogin(String login){
+        return this.repository.findByLogin(login);
+    }
+
     @Override
     public void removeById(Long id){
         super.removeById(id);

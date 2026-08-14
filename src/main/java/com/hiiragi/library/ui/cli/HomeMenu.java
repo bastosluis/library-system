@@ -1,17 +1,22 @@
 package com.hiiragi.library.ui.cli;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
 import com.hiiragi.library.application.Session;
 import com.hiiragi.library.enums.UserRole;
+import com.hiiragi.library.exceptions.BookNotFoundException;
+import com.hiiragi.library.exceptions.DuplicateUserException;
 import com.hiiragi.library.exceptions.EmptySessionException;
 import com.hiiragi.library.exceptions.InvalidUserRoleException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.NotFoundException;
+import com.hiiragi.library.exceptions.UserNotFoundException;
+import com.hiiragi.library.model.Author;
 import com.hiiragi.library.model.Book;
-import com.hiiragi.library.model.Loan;
+import com.hiiragi.library.model.Category;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.service.LibraryService;
 import com.hiiragi.library.ui.cli.util.InputReader;
@@ -134,20 +139,6 @@ public class HomeMenu implements Menu{
                         .getId();
         
         libraryService.printAllActiveLoansFromUser(userId);
-        // List<Loan> loans = libraryService.getLoanService().findByUserId(this.session.getCurrentUser().get().getId());
-        // if (loans.isEmpty()) {
-        //     System.out.println("There are currently no loans yet.");
-        //     return;
-        // }
-        // System.out.println("These are the books currently loaned:\n");
-        
-        // for (Loan loan : loans){
-        //     String title = libraryService.getBookService().findById(loan.getBookId()).get().getTitle();
-        //     System.out.println("- "+title+", Loan id: "+loan.getId()+
-        //                                 "\n * Due Date: "+loan.getDueDate()+
-        //                                 "\n * Loan Date: "+loan.getLoanDate()+
-        //                                 "\n * Status: "+loan.getStatus());
-        // }
         
         Long id = Long.valueOf(InputReader.readInt("Type the id of the book you want to return: "));
         try{
@@ -186,6 +177,167 @@ public class HomeMenu implements Menu{
         }
     }    
     
+    private void handleAddBook(){
+        System.out.println("""
+                We are adding a\n
+                1. New entry
+                2. New copy
+                """);
+        try {            
+            int option = InputReader.readInt("Choose one option, or type anything else to cancel: ");
+            if(option != 1 && option != 2){
+                System.out.println("Cancelling operating...");  
+                return;
+            }
+            switch(option){
+                case 1 -> {
+                    System.out.println("Adding a new book ENTRY to the database:");
+
+                    String title = InputReader.readString("Book Title: ");
+                    String isbn = InputReader.readString("ISBN: ");
+                    String description = InputReader.readString("Description: ");
+                    int year = InputReader.readInt("Publication Year: ");
+                    String authorName = InputReader.readString("Author Name: ");
+                    String nationality = InputReader.readString("Author Nationality: ");
+                    String categoryName = InputReader.readString("Category Name: ");
+                    String categoryDescription = InputReader.readString("Category Description: ");
+
+                    Book book = new Book(
+                        title,
+                        isbn,
+                        description,
+                        Year.of(year),
+                        new Author(authorName, nationality),
+                        new Category(categoryName, categoryDescription)
+                    );
+
+                    libraryService.addBook(book);
+                    System.out.println("Sucessfully added the new entry "+ title);
+                }
+                case 2 -> {
+                    System.out.println("Adding a new book COPY to the database:");
+                    String title = InputReader.readString("Book Title: ");
+                    libraryService.addBook(libraryService.findBookByTitle(title)
+                                    .orElseThrow(() -> new BookNotFoundException(title))
+                                );
+                    System.out.println("Sucessfully added a new copy of "+title);
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Cancelling operation...");
+        }
+    }
+
+    private void handleRemoveBook(){
+        String title = InputReader.readString("Book title to be removed: ");
+        libraryService.removeBook(libraryService.findBookByTitle(title)
+                                .orElseThrow(() -> new BookNotFoundException(title))
+                                .getId()
+                            );
+        System.out.println("Sucessfully removed book "+title);
+    }
+
+    private void handleAddUser() {
+        String name = InputReader.readString("Name: ");
+        String email = InputReader.readString("Email: ");
+        String phone = InputReader.readString("Phone: ");
+        int maxLoans = InputReader.readInt("Maximum number of loans: ");
+        String login = InputReader.readString("Login: ");
+        String password = InputReader.readString("Password: ");
+
+        System.out.println("Select the user's role:");
+        System.out.println("1. Member");
+        System.out.println("2. Librarian");
+        System.out.println("3. Admin");
+
+        try {
+            int roleOption = InputReader.readInt("Role: (type anything else to cancel)");
+
+            while(roleOption != 1 && roleOption != 2 && roleOption != 3){
+                    roleOption = InputReader.readInt("Please type a valid option.");
+            }
+            
+            UserRole role = switch (roleOption) {
+                case 1 -> UserRole.MEMBER;
+                case 2 -> UserRole.LIBRARIAN;
+                case 3 -> UserRole.ADMIN;
+                default -> {
+                    System.out.println("Invalid role, adding as member.");
+                    yield UserRole.MEMBER;
+                }
+            };
+            
+            User user = new User(
+                name,
+                email,
+                phone,
+                true,
+                maxLoans,
+                role,
+                login,
+                password
+            );
+    
+        libraryService.addUser(user).orElseThrow(() -> new DuplicateUserException(""));
+        System.out.println("Sucessfully added user!");
+        } catch (NumberFormatException e) {   
+            System.out.println("Cancelling operation...");
+        }
+    }
+
+    private void handleAddMember() {
+        String name = InputReader.readString("Name: ");
+        String email = InputReader.readString("Email: ");
+        String phone = InputReader.readString("Phone: ");
+        int maxLoans = InputReader.readInt("Maximum number of loans: ");
+        String login = InputReader.readString("Login: ");
+        String password = InputReader.readString("Password: ");
+
+        User user = new User(
+            name,
+            email,
+            phone,
+            true,
+            maxLoans,
+            UserRole.MEMBER,
+            login,
+            password
+        );
+
+        libraryService.addUser(user).orElseThrow(() -> new DuplicateUserException(""));
+        System.out.println("Sucessfully added this member!");
+    }
+
+    private void handleRemoveUser() {
+        String login = InputReader.readString("Type the login of the user: ");
+
+        User user = libraryService.findUserByLogin(login).orElseThrow(() -> new UserNotFoundException(login));
+        User currentUser = session.getCurrentUser().orElseThrow(() -> new EmptySessionException());
+        if (user.equals(currentUser)){
+            System.out.println("You can't remove yourself.");
+            return;
+        }
+
+        if (user.getRole() == UserRole.ADMIN){
+            System.out.println("You don't have permission to remove this administrator.");
+            return;
+        }
+        libraryService.removeUser(user.getId());
+        System.out.println("Sucessfully removed this user!");
+    }
+
+    private void handleRemoveMember() {
+        String login = InputReader.readString("Type the login of the user: ");
+
+        User user = libraryService.findUserByLogin(login).orElseThrow(() -> new UserNotFoundException(login));
+        if (user.getRole() != UserRole.MEMBER){
+            System.out.println("You don't have permission to remove this user.");
+            return;
+        }
+        libraryService.removeUser(user.getId());
+        System.out.println("Sucessfully removed this member!");
+    }
+
     @Override
     public void show() {
         User user = this.session.getCurrentUser().orElseThrow(() -> new EmptySessionException());

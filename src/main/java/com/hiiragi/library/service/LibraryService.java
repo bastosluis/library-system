@@ -98,6 +98,15 @@ public class LibraryService {
         return userService.findAll();
     }
 
+    public Optional<User> findUserByLogin(String login){
+        authorizationService.requireRole(
+                UserRole.LIBRARIAN,
+                UserRole.ADMIN
+        );
+        
+        return userService.findByLogin(login);
+    }
+
     public Optional<User> addUser(User user) {
         authorizationService.requireRole(UserRole.ADMIN);
 
@@ -127,7 +136,7 @@ public class LibraryService {
 
         user.setActive(true);
     }
-
+    
     // =========================
     // Loans
     // =========================
@@ -145,6 +154,32 @@ public class LibraryService {
         return loanService.findAll();
     }
 
+    public List<Loan> findLoansByUserId(Long id){
+        return loanService.findByUserId(id);
+    }
+
+    public List<Loan> findLoansByBookId(Long id){
+        authorizationService.requireRole(
+                UserRole.LIBRARIAN,
+                UserRole.ADMIN
+        );
+
+        return loanService.findByBookId(id);
+    }
+
+    public List<Loan> findLoansByStatus(LoanStatus status){
+        authorizationService.requireRole(
+                UserRole.LIBRARIAN,
+                UserRole.ADMIN
+        );
+        
+        return loanService.findByStatus(status);
+    }
+
+    // =========================
+    // Business logic
+    // =========================
+
     public void borrowBook(
             String title,
             Long userId,
@@ -157,7 +192,7 @@ public class LibraryService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         Optional<Book> book = bookService.findByTitle(title);
-
+        
         if (book.isEmpty()) {
             throw new BookNotFoundException(title);
         }
@@ -185,11 +220,6 @@ public class LibraryService {
         loanService.add(loan);
         user.increaseLoan();
     }
-
-    // =========================
-        // Business logic
-        // =========================
-    //
 
     public void returnBook(Long loanId)
             throws LoanNotFoundException,
@@ -224,5 +254,22 @@ public class LibraryService {
         copy.returnCopy();
         loan.markAsReturned(LocalDate.now());
         user.decreaseLoan();
+    }
+
+    public void printAllActiveLoansFromUser(Long userId){
+        List<Loan> loans = findLoansByUserId(userId);
+        if (loans.isEmpty()) {
+            System.out.println("There are currently no loans yet.");
+            return;
+        }
+        System.out.println("These are the books currently loaned:\n");
+        
+        for (Loan loan : loans){
+            String title = findBookById(loan.getBookId()).orElseThrow().getTitle();
+            System.out.println("- "+title+", Loan id: "+loan.getId()+
+                                        "\n * Due Date: "+loan.getDueDate()+
+                                        "\n * Loan Date: "+loan.getLoanDate()+
+                                        "\n * Status: "+loan.getStatus());
+        }
     }
 }
