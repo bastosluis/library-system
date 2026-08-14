@@ -35,9 +35,7 @@ public enum MainMenu implements Menu{
         
         seedData(bookRepository, userRepository);
         
-        AuthorizationService authorizationService = new AuthorizationService(session);
-
-        UserService userService = new UserService(userRepository, authorizationService);
+        UserService userService = new UserService(userRepository);
 
         loginPrompt = new LoginPrompt(userService);
 
@@ -51,10 +49,10 @@ public enum MainMenu implements Menu{
             session.login(loggedUser.get());
 
             libraryService = new LibraryService(
-                                                    new BookService(bookRepository, authorizationService), 
+                                                    new BookService(bookRepository), 
                                                     userService,
-                                                    new LoanService(loanRepository, authorizationService),
-                                                    authorizationService
+                                                    new LoanService(loanRepository),
+                                                    new AuthorizationService(session)
                                                 );
                                                 
             homeMenu = new HomeMenu(session, libraryService);

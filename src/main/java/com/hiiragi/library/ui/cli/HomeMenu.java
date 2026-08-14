@@ -33,7 +33,7 @@ public class HomeMenu implements Menu{
         while (!logout){
             try{
                 UserRole role = session.getCurrentUser()
-                .orElseThrow(() -> new EmptySessionException("Current session has no user logged in."))
+                .orElseThrow(() -> new EmptySessionException())
                 .getRole();
                 
                 logout = switch(role){
@@ -121,7 +121,7 @@ public class HomeMenu implements Menu{
         String title = InputReader.readString("Book Title: \n");
         LocalDate dueDate = InputReader.readDate("Due Date: \n"); 
         try {
-            libraryService.borrowBook(title, this.session.getCurrentUser().get(), dueDate);
+            libraryService.borrowBook(title, this.session.getCurrentUser().orElseThrow(() -> new EmptySessionException()).getId(), dueDate);
             System.out.println("Successfully borrowed "+title+"!");
         } catch (RuntimeException e) {
             System.err.println(e.getMessage());
@@ -129,20 +129,25 @@ public class HomeMenu implements Menu{
     }
     
     private void handleReturnBook() {
-        List<Loan> loans = libraryService.getLoanService().findByUserId(this.session.getCurrentUser().get().getId());
-        if (loans.isEmpty()) {
-            System.out.println("There are currently no loans yet.");
-            return;
-        }
-        System.out.println("These are the books currently loaned:\n");
+        Long userId = this.session.getCurrentUser()
+                        .orElseThrow(() -> new EmptySessionException())
+                        .getId();
         
-        for (Loan loan : loans){
-            String title = libraryService.getBookService().findById(loan.getBookId()).get().getTitle();
-            System.out.println("- "+title+", Loan id: "+loan.getId()+
-                                        "\n * Due Date: "+loan.getDueDate()+
-                                        "\n * Loan Date: "+loan.getLoanDate()+
-                                        "\n * Status: "+loan.getStatus());
-        }
+        libraryService.printAllActiveLoansFromUser(userId);
+        // List<Loan> loans = libraryService.getLoanService().findByUserId(this.session.getCurrentUser().get().getId());
+        // if (loans.isEmpty()) {
+        //     System.out.println("There are currently no loans yet.");
+        //     return;
+        // }
+        // System.out.println("These are the books currently loaned:\n");
+        
+        // for (Loan loan : loans){
+        //     String title = libraryService.getBookService().findById(loan.getBookId()).get().getTitle();
+        //     System.out.println("- "+title+", Loan id: "+loan.getId()+
+        //                                 "\n * Due Date: "+loan.getDueDate()+
+        //                                 "\n * Loan Date: "+loan.getLoanDate()+
+        //                                 "\n * Status: "+loan.getStatus());
+        // }
         
         Long id = Long.valueOf(InputReader.readInt("Type the id of the book you want to return: "));
         try{
@@ -155,7 +160,7 @@ public class HomeMenu implements Menu{
     }
 
     private void handleListBooks() {
-        List<Book> books = libraryService.getBookService().findAll();
+        List<Book> books = libraryService.findAllBooks();
         if (books.isEmpty()){
             System.out.println("No books available.\n");
         }
@@ -169,7 +174,7 @@ public class HomeMenu implements Menu{
 
     private void handleSearchBook() {
         String title = InputReader.readString("Book Title: \n");
-        Optional<Book> foundBook = libraryService.getBookService().findByTitle(title);
+        Optional<Book> foundBook = libraryService.findBookByTitle(title);
 
         if (foundBook.isPresent()) {
             System.out.println(
@@ -183,7 +188,7 @@ public class HomeMenu implements Menu{
     
     @Override
     public void show() {
-        User user = this.session.getCurrentUser().orElseThrow(() -> new EmptySessionException("Current session has no user logged in."));
+        User user = this.session.getCurrentUser().orElseThrow(() -> new EmptySessionException());
         System.out.println("\n===============\n");
         System.out.println("Welcome, " + user.getName() + "!\n");
         System.out.println("Please choose one of the following options (type the according number):\n");

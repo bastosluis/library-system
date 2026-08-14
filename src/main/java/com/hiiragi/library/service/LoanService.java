@@ -3,16 +3,12 @@ package com.hiiragi.library.service;
 import java.util.List;
 
 import com.hiiragi.library.enums.LoanStatus;
-import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.repository.LoanRepository;
 
 public class LoanService extends BaseService<Loan, LoanRepository>{
 
-    private AuthorizationService authorizationService;
-    
-    public LoanService(LoanRepository repository, AuthorizationService authorizationService) {
-        this.authorizationService = authorizationService;
+    public LoanService(LoanRepository repository) {
         super(repository);
     }
 
@@ -23,7 +19,6 @@ public class LoanService extends BaseService<Loan, LoanRepository>{
 
     @Override
     public void removeById(Long id){
-        authorizationService.requireRole(UserRole.ADMIN, UserRole.LIBRARIAN);
         super.removeById(id);
     }
     
@@ -38,13 +33,5 @@ public class LoanService extends BaseService<Loan, LoanRepository>{
 
     public List<Loan> findByStatus(LoanStatus status){
         return this.repository.findByStatus(status);
-    }
-
-    public AuthorizationService getAuthorizationService() {
-        return authorizationService;
-    }
-
-    public void setAuthorizationService(AuthorizationService authorizationService) {
-        this.authorizationService = authorizationService;
     }
 }

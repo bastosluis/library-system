@@ -41,9 +41,9 @@ public class LibraryServiceTest {
         loanRepo = new LoanRepository();
         authorizationService = new AuthorizationService(createSession(UserRole.MEMBER));
         userRepo.save(authorizationService.getSession().getCurrentUser().get());
-        userService = new UserService(userRepo, authorizationService);
-        bookService = new BookService(bookRepo, authorizationService);
-        LoanService = new LoanService(loanRepo, authorizationService);
+        userService = new UserService(userRepo);
+        bookService = new BookService(bookRepo);
+        LoanService = new LoanService(loanRepo);
 
         libraryService = new LibraryService(bookService, userService, LoanService, authorizationService);
     }
@@ -56,21 +56,21 @@ public class LibraryServiceTest {
     @Test
     void shouldBorrowBook(){
         seedBookRepo();
-        Book book = libraryService.getBookService().findAll().getFirst();
+        Book book = libraryService.findAllBooks().getFirst();
         User user = authorizationService.getSession().getCurrentUser().orElseThrow();
-        libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
+        libraryService.borrowBook(book.getTitle(), user.getId(), DUE_DATE);
 
         assertEquals(BookStatus.BORROWED, book.getCopies().getFirst().getStatus());
-        assertFalse(libraryService.getLoanService().findAll().isEmpty());
+        assertFalse(libraryService.findAllLoans().isEmpty());
     }
 
     @Test
     void shouldNotBorrowBook(){
         seedBookRepo();
-        Book book = libraryService.getBookService().findAll().getFirst();
+        Book book = libraryService.findAllBooks().getFirst();
         User user = authorizationService.getSession().getCurrentUser().orElseThrow();
         user.setMaxLoans(2);
-        libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
+        libraryService.borrowBook(book.getTitle(), user.getId(), DUE_DATE);
         
         assertThrows(NoAvailableCopiesException.class, () -> libraryService.borrowBook(book.getTitle(), user, DUE_DATE));
     }
@@ -78,10 +78,10 @@ public class LibraryServiceTest {
     @Test
     void shouldReturnBook(){
         seedBookRepo();
-        Book book = libraryService.getBookService().findAll().getFirst();
+        Book book = libraryService.findAllBooks().getFirst();
         User user = authorizationService.getSession().getCurrentUser().orElseThrow();
-        libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
-        Long loanId = libraryService.getLoanService().findAll().getFirst().getId();
+        libraryService.borrowBook(book.getTitle(), user.getId(), DUE_DATE);
+        Long loanId = libraryService.findAllLoans().getFirst().getId();
         
         assertDoesNotThrow(() -> libraryService.returnBook(loanId));
     }
@@ -94,10 +94,10 @@ public class LibraryServiceTest {
     @Test
     void shouldNotReturnBookTwice(){
         seedBookRepo();
-        Book book = libraryService.getBookService().findAll().getFirst();
+        Book book = libraryService.findAllBooks().getFirst();
         User user = authorizationService.getSession().getCurrentUser().orElseThrow();
-        libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
-        Long loanId = libraryService.getLoanService().findAll().getFirst().getId();
+        libraryService.borrowBook(book.getTitle(), user.getId(), DUE_DATE);
+        Long loanId = libraryService.findAllLoans().getFirst().getId();
         try {
             libraryService.returnBook(loanId);
         } catch (NotFoundException | LoanAlreadyReturnedException e) {
@@ -110,10 +110,10 @@ public class LibraryServiceTest {
     @Test
     void shouldNotReturnInexistentBook(){
         seedBookRepo();
-        Book book = libraryService.getBookService().findAll().getFirst();
+        Book book = libraryService.findAllBooks().getFirst();
         User user = authorizationService.getSession().getCurrentUser().orElseThrow();
-        libraryService.borrowBook(book.getTitle(), user, DUE_DATE);
-        Long loanId = libraryService.getLoanService().findAll().getFirst().getId();
+        libraryService.borrowBook(book.getTitle(), user.getId(), DUE_DATE);
+        Long loanId = libraryService.findAllLoans().getFirst().getId();
         
         bookRepo.delete(book);
 
