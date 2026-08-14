@@ -8,5 +8,15 @@
     "role": "MEMBER",
     "login": "alice",
     "password": "123"
+  },
+  {
+    "name": "Hiiragi",
+    "email": "hiiragi@hachiouji.com",
+    "phone": "123456789",
+    "isActive": true,
+    "maxLoans": 1,
+    "role": "ADMIN",
+    "login": "admin",
+    "password": "admin"
   }
 ]

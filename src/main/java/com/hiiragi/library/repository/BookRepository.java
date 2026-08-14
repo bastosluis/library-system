@@ -10,7 +10,9 @@ import com.hiiragi.library.model.BookCopy;
 public class BookRepository
         extends InMemoryRepository<Book> {
     
-    protected Long copyNextId = 1L;
+    private Long copyNextId = 1L;
+    private Long authorNextId = 1L;
+    private Long categoryNextId = 1L;
     
     public Optional<Book> findByTitle(String title) {
         for (Book book : entities) {
@@ -39,6 +41,7 @@ public class BookRepository
             ensureNotDuplicate(book);
             super.save(book);
             addCopy(book, status);
+            setEntitiesId(book);
             return book;
     }
 
@@ -59,5 +62,10 @@ public class BookRepository
     
     public void addCopy(Book book){
         this.addCopy(book, BookStatus.AVAILABLE);
+    }
+
+    private void setEntitiesId(Book book){
+        book.getAuthor().setId(authorNextId++);
+        book.getCategory().setId(categoryNextId++);
     }
 }

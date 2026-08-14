@@ -1,10 +1,30 @@
 [
-    {
-        "title": "The Hobbit",
-        "author": "J. R. R. Tolkien"
+  {
+    "title": "The Hobbit",
+    "isbn": "9780547928227",
+    "description": "A fantasy novel about Bilbo Baggins and his unexpected adventure.",
+    "year": 1937,
+    "author": {
+      "name": "J. R. R. Tolkien",
+      "nationality": "British"
     },
-    {
-        "title": "1984",
-        "author": "George Orwell"
+    "category": {
+      "name": "Fantasy",
+      "description": "Stories involving magic, imaginary worlds, and supernatural elements."
     }
+  },
+  {
+    "title": "1984",
+    "isbn": "9780451524935",
+    "description": "A dystopian novel about surveillance and authoritarian government.",
+    "year": 1949,
+    "author": {
+      "name": "George Orwell",
+      "nationality": "British"
+    },
+    "category": {
+      "name": "Dystopian",
+      "description": "Fiction depicting societies characterized by oppression or extreme social control."
+    }
+  }
 ]

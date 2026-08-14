@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.BookRepository;
 import com.hiiragi.library.repository.UserRepository;
@@ -19,14 +21,15 @@ public class DataSeeder {
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
         mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
     }
 
     public void seed() {
         List<User> users = load("/seed/users.json", User.class);
-        // List<Book> books = load("/seed/books.json", Book.class);
+        List<Book> books = load("/seed/books.json", Book.class);
 
         users.forEach(userRepository::save);
-        // books.forEach(bookRepository::save);
+        books.forEach(bookRepository::save);
     }
     
     private <T> List<T> load(String resource, Class<T> type) {

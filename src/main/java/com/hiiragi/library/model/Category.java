@@ -1,10 +1,16 @@
 package com.hiiragi.library.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Category extends BaseEntity{
     private String name;
     private String description;
 
-    public Category(String name, String description) {
+    @JsonCreator
+    public Category(
+        @JsonProperty("name") String name,
+        @JsonProperty("description") String description) {
         this.name = name;
         this.description = description;
     }

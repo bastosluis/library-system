@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.hiiragi.library.application.Session;
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.EmptySessionException;
+import com.hiiragi.library.exceptions.InvalidUserRoleException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.NotFoundException;
 import com.hiiragi.library.model.Book;
@@ -28,24 +29,18 @@ public class HomeMenu implements Menu{
     public void start() {
 
         this.show();
-
-        while (true){
-            
+        boolean logout = false;
+        while (!logout){
             try{
-                int option = InputReader.readInt("Option: ");
-                switch (option) {
-                    case 1 -> handleBorrowBook();
-                    case 2 -> handleReturnBook();
-                    case 3 -> handleListBooks();
-                    case 4 -> handleSearchBook();
-                    case 5 -> {
-                        System.out.println("Logging out...");
-                        session.logout();
-                        return; // logout
-                    }
-                    case 0 -> System.exit(0);
-                    default -> System.out.println("Please select a valid option.");
-                }
+                UserRole role = session.getCurrentUser()
+                .orElseThrow(() -> new EmptySessionException("Current session has no user logged in."))
+                .getRole();
+                
+                logout = switch(role){
+                    case UserRole.ADMIN -> handleAdminInput();
+                    case UserRole.LIBRARIAN -> handleLibrarianInput();
+                    case UserRole.MEMBER -> handleMemberInput();
+                    };
             }
             catch (NumberFormatException e){
                 System.out.println("Please select a valid option.");
@@ -53,7 +48,73 @@ public class HomeMenu implements Menu{
             catch (UnsupportedOperationException e){
                 System.out.println(e.getMessage());
             }
+        }  
+    }
+
+    private boolean handleMemberInput(){
+        int option = InputReader.readInt("Option: ");
+            switch (option) {
+                case 1 -> handleBorrowBook();
+                case 2 -> handleReturnBook();
+                case 3 -> handleListBooks();
+                case 4 -> handleSearchBook();
+                case 9 -> {
+                    System.out.println("Logging out...");
+                    session.logout();
+                    return true; // logout
+                }
+                case 0 -> System.exit(0);
+                default -> System.out.println("Please select a valid option.");
+            }
+            return false;
+    }
+
+    private boolean handleLibrarianInput() {
+        int option = InputReader.readInt("Option: ");
+
+        switch (option) {
+            case 1 -> handleBorrowBook();
+            case 2 -> handleReturnBook();
+            case 3 -> handleListBooks();
+            case 4 -> handleSearchBook();
+            case 5 -> handleAddBook();
+            case 6 -> handleRemoveBook();
+            case 7 -> handleAddMember();
+            case 8 -> handleRemoveMember();
+            case 9 -> {
+                System.out.println("Logging out...");
+                session.logout();
+                return true;
+            }
+            case 0 -> System.exit(0);
+            default -> System.out.println("Please select a valid option.");
         }
+
+        return false;
+    }
+
+    private boolean handleAdminInput() {
+        int option = InputReader.readInt("Option: ");
+
+        switch (option) {
+            case 1 -> handleBorrowBook();
+            case 2 -> handleReturnBook();
+            case 3 -> handleListBooks();
+            case 4 -> handleSearchBook();
+            case 5 -> handleAddBook();
+            case 6 -> handleRemoveBook();
+            case 7 -> handleAddUser();
+            case 8 -> handleRemoveUser();
+            case 9 -> {
+                System.out.println("Logging out...");
+                session.logout();
+                return true;
+            }
+            case 0 -> System.exit(0);
+            default -> System.out.println("Please select a valid option.");
+        }
+
+        return false;
     }
 
     private void handleBorrowBook() {
@@ -69,8 +130,12 @@ public class HomeMenu implements Menu{
     
     private void handleReturnBook() {
         List<Loan> loans = libraryService.getLoanService().findByUserId(this.session.getCurrentUser().get().getId());
+        if (loans.isEmpty()) {
+            System.out.println("There are currently no loans yet.");
+            return;
+        }
         System.out.println("These are the books currently loaned:\n");
-
+        
         for (Loan loan : loans){
             String title = libraryService.getBookService().findById(loan.getBookId()).get().getTitle();
             System.out.println("- "+title+", Loan id: "+loan.getId()+
@@ -79,9 +144,10 @@ public class HomeMenu implements Menu{
                                         "\n * Status: "+loan.getStatus());
         }
         
-        Long id = Long.valueOf(InputReader.readInt("Type the id of the book you want to return: \n"));
+        Long id = Long.valueOf(InputReader.readInt("Type the id of the book you want to return: "));
         try{
             libraryService.returnBook(id);
+            System.out.println("Book sucessfully returned!");
         }
         catch (NotFoundException | LoanAlreadyReturnedException e){
            System.err.println(e.getMessage());
@@ -121,18 +187,45 @@ public class HomeMenu implements Menu{
         System.out.println("\n===============\n");
         System.out.println("Welcome, " + user.getName() + "!\n");
         System.out.println("Please choose one of the following options (type the according number):\n");
-        switch (user.getRole()) {
+        showUserMenu(user.getRole());
+        System.out.println("\n===============\n");
+    }
+
+    private void showUserMenu(UserRole role){
+        switch (role) {
             case UserRole.MEMBER -> System.out.println("""
                     1. Borrow Book
                     2. Return Book
                     3. List Books
                     4. Search Book
-                    5. Logout
+                    9. Logout
                     0. Exit Application
                 """);
-                
-                default -> System.out.println("Invalid user role.");
-                }
-        System.out.println("\n===============\n");
+            case UserRole.LIBRARIAN -> System.out.println("""
+                    1. Borrow Book
+                    2. Return Book
+                    3. List Books
+                    4. Search Book
+                    5. Add Book
+                    6. Remove Book
+                    7. Add Member
+                    8. Remove Member
+                    9. Logout
+                    0. Exit Application
+                    """);
+            case UserRole.ADMIN -> System.out.println("""
+                    1. Borrow Book
+                    2. Return Book
+                    3. List Books
+                    4. Search Book
+                    5. Add Book
+                    6. Remove Book
+                    7. Add User
+                    8. Remove User
+                    9. Logout
+                    0. Exit Application
+                    """);
+            default -> throw new InvalidUserRoleException("Invalid user role: "+ role);
+        }
     }
 }
