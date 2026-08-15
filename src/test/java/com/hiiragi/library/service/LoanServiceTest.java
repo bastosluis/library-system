@@ -1,9 +1,13 @@
 package com.hiiragi.library.service;
 
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.repository.LoanRepository;
 import static com.hiiragi.library.util.MockedObjects.createLoan;
@@ -34,5 +38,19 @@ public class LoanServiceTest {
         loanService.removeById(loan.getId());
 
         assertTrue(loanService.findAll().isEmpty());
+    }
+
+    @Test
+    void shouldUpdateLoans(){
+        Loan lateLoan = createLoan();
+        lateLoan.setDueDate(LocalDate.of(2000, 1,1));
+        Loan activeLoan = createLoan();
+        activeLoan.setDueDate(LocalDate.MAX);
+        loanRepo.save(activeLoan);
+        loanRepo.save(lateLoan);
+        loanService.updateLoans();
+
+        assertEquals(LoanStatus.ACTIVE, activeLoan.getStatus());
+        assertEquals(LoanStatus.LATE, lateLoan.getStatus());
     }
 }

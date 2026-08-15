@@ -87,4 +87,10 @@ public class Loan extends BaseEntity{
         this.status = LoanStatus.RETURNED;
         this.returnDate = returnDate;
     }
+
+    public void update(){
+        if (this.status == LoanStatus.ACTIVE && this.dueDate.isBefore(LocalDate.now())){
+            this.status = LoanStatus.LATE;
+        }
+    }
 }

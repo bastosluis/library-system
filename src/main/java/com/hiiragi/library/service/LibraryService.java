@@ -34,6 +34,7 @@ public class LibraryService {
         this.bookService = bookService;
         this.userService = userService;
         this.loanService = loanService;
+        loanService.updateLoans();
         this.authorizationService = authorizationService;
     }
 

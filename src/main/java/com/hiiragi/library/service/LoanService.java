@@ -22,6 +22,9 @@ public class LoanService extends BaseService<Loan, LoanRepository>{
         super.removeById(id);
     }
     
+    public void updateLoans(){
+        this.repository.findAll().forEach(Loan::update);
+    }
 
     public List<Loan> findByUserId(Long id){
         return this.repository.findByUserId(id);
