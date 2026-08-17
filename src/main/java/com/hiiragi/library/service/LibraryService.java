@@ -9,6 +9,8 @@ import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.BookNotFoundException;
 import com.hiiragi.library.exceptions.CopyNotFoundException;
+import com.hiiragi.library.exceptions.InvalidBookRemovalException;
+import com.hiiragi.library.exceptions.InvalidUserRemovalException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.LoanNotFoundException;
 import com.hiiragi.library.exceptions.NoAvailableCopiesException;
@@ -78,6 +80,13 @@ public class LibraryService {
                 UserRole.ADMIN
         );
 
+        Book book = bookService.findById(id)
+                    .orElseThrow(() -> new BookNotFoundException(id));
+                    
+        if (!loanService.findByBookId(book.getId()).isEmpty()){
+            throw new InvalidBookRemovalException();
+        }
+
         bookService.removeById(id);
     }
 
@@ -117,6 +126,9 @@ public class LibraryService {
     public void removeUser(Long id) {
         authorizationService.requireRole(UserRole.ADMIN);
 
+        if (!loanService.findByUserId(id).isEmpty()){
+            throw new InvalidUserRemovalException(id);
+        }
         userService.removeById(id);
     }
 
@@ -192,22 +204,11 @@ public class LibraryService {
         User user = userService.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        Optional<Book> book = bookService.findByTitle(title);
-        
-        if (book.isEmpty()) {
-            throw new BookNotFoundException(title);
-        }
+        Book foundBook = bookService.findByTitle(title).
+                orElseThrow(() -> new BookNotFoundException(title));
 
-        Book foundBook = book.get();
-
-        Optional<BookCopy> optionalCopy =
-                bookService.getAvailableCopy(foundBook);
-
-        if (optionalCopy.isEmpty()) {
-            throw new NoAvailableCopiesException(title);
-        }
-
-        BookCopy copy = optionalCopy.get();
+        BookCopy copy = bookService.getAvailableCopy(foundBook).
+                orElseThrow(() -> new NoAvailableCopiesException(title));
 
         copy.borrow();
 

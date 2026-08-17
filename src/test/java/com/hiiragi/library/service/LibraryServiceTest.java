@@ -12,6 +12,8 @@ import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.BookNotFoundException;
 import com.hiiragi.library.exceptions.InactiveUserException;
+import com.hiiragi.library.exceptions.InvalidBookRemovalException;
+import com.hiiragi.library.exceptions.InvalidUserRemovalException;
 import com.hiiragi.library.exceptions.LoanAlreadyReturnedException;
 import com.hiiragi.library.exceptions.LoanLimitExceededExcetion;
 import com.hiiragi.library.exceptions.LoanNotFoundException;
@@ -168,6 +170,32 @@ public class LibraryServiceTest {
         assertThrows(BookNotFoundException.class,  () -> libraryService.returnBook(loanId));
     }
 
+    @Test 
+    void shouldAddBook(){
+        changeToRole(UserRole.LIBRARIAN);
+        assertDoesNotThrow(() -> libraryService.addBook(createBook()));
+    }
+
+    @Test
+    void shouldNotAddBook(){
+        assertThrows(UnauthorizedException.class, () -> libraryService.addBook(createBook()));
+    }
+
+    @Test
+    void shouldRemoveBook(){
+        seedBookRepo();
+        changeToRole(UserRole.LIBRARIAN);
+        assertDoesNotThrow(() -> libraryService.removeBook(1L));
+    }
+
+    @Test
+    void shouldNotRemoveBookIfThereAreLoans(){
+        seedBookRepo();
+        libraryService.borrowBook(BOOK_TITLE, authorizationService.getSession().getCurrentUser().orElseThrow().getId(), DUE_DATE);
+        changeToRole(UserRole.LIBRARIAN);
+        assertThrows(InvalidBookRemovalException.class, () -> libraryService.removeBook(1L));   
+    }
+    
     // ===============
     // User
     // ===============
@@ -213,6 +241,15 @@ public class LibraryServiceTest {
     void shouldNotRemoveUser(){
         userRepo.save(createUser("remove", "remove@email.com", UserRole.LIBRARIAN));
         assertThrows(UnauthorizedException.class, () -> libraryService.removeUser(userRepo.findByLogin("remove").orElseThrow().getId()));
+    }
+
+    @Test
+    void shouldNotRemoveUserIfThereAreLoans(){
+        seedBookRepo();
+        libraryService.borrowBook(BOOK_TITLE, 1L, DUE_DATE);
+        String login = authorizationService.getSession().getCurrentUser().orElseThrow().getLogin();
+        changeToRole(UserRole.ADMIN);
+        assertThrows(InvalidUserRemovalException.class, () -> libraryService.removeUser(userRepo.findByLogin(login).orElseThrow().getId()));
     }
 
     @Test
