@@ -33,12 +33,9 @@ public abstract class InMemoryRepository<T extends BaseEntity>
 
     @Override
     public Optional<T> findById(Long id) {
-        for (T entity : entities) {
-            if (entity.getId().equals(id)) {
-                return Optional.of(entity);
-            }
-        }
-        return Optional.empty();
+                return entities.stream()
+                        .filter((entity) -> entity.getId().equals(id))
+                        .findAny();
     }
 
     @Override

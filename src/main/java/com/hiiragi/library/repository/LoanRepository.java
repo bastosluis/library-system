@@ -1,7 +1,7 @@
 package com.hiiragi.library.repository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.model.Loan;
@@ -10,32 +10,21 @@ public class LoanRepository
         extends InMemoryRepository<Loan>{
 
     public List<Loan> findByUserId(Long id){
-        List<Loan> loans = new ArrayList<>();
-        for (Loan loan : this.entities) {
-            if (loan.getUserId().equals(id)){
-                loans.add(loan);
-            }
-        }
-        return loans;
+        return this.entities.stream()
+                            .filter((loan) -> Objects.equals(loan.getUserId(), id))
+                            .toList();
     }
 
     public List<Loan> findByBookId(Long id){
-        List<Loan> loans = new ArrayList<>();
-        for (Loan loan : this.entities) {
-            if (loan.getBookId().equals(id)){
-                loans.add(loan);
-            }
-        }
-        return loans;
+        return this.entities.stream()
+                            .filter((loan) -> Objects.equals(loan.getBookId(), id))
+                            .toList();
+
     }
 
     public List<Loan> findByStatus(LoanStatus status){
-        List<Loan> loans = new ArrayList<>();
-        for (Loan loan : this.entities) {
-            if (loan.getStatus().equals(status)){
-                loans.add(loan);
-            }
-        }
-        return loans;
+        return this.entities.stream()
+                            .filter((loan) -> Objects.equals(loan.getStatus(), status))
+                            .toList();
     }
 }

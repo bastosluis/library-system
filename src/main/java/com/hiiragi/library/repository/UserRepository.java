@@ -1,5 +1,6 @@
 package com.hiiragi.library.repository;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import com.hiiragi.library.exceptions.DuplicateUserException;
@@ -9,12 +10,8 @@ public class UserRepository
         extends InMemoryRepository<User> {
 
     public boolean existsByEmail(String email) {
-        for (User user : entities) {
-            if (email.equals(user.getEmail())) {
-                return true;
-            }
-        }
-        return false;
+        return this.entities.stream()
+                            .anyMatch((user) -> Objects.equals(user.getEmail(), email));
     }
     
     @Override
@@ -33,30 +30,21 @@ public class UserRepository
     }
 
     public Optional<User> findByEmail(String email){
-        for (User user : entities) {
-            if (user.getEmail().equals(email)){
-                return Optional.of(user);
-            }
-        }
-        return Optional.empty();
+        return this.entities.stream()
+                            .filter((user) -> Objects.equals(user.getEmail(), email))
+                            .findAny();
     }
 
     public Optional<User> findByName(String name){
-        for (User user : entities) {
-            if (user.getName().equals(name)){
-                return Optional.of(user);
-            }
-        }
-        return Optional.empty();
+        return this.entities.stream()
+                            .filter((user) -> Objects.equals(user.getName(), name))
+                            .findAny();
     }
 
     public Optional<User> findByLogin(String login){
-        for (User user : entities) {
-            if (user.getLogin().equals(login)){
-                return Optional.of(user);
-            }
-        }
-        return Optional.empty();
+        return this.entities.stream()
+                            .filter((user) -> Objects.equals(user.getLogin(), login))
+                            .findAny();
     }
 
 }

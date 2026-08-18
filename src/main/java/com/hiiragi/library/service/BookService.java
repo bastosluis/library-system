@@ -36,10 +36,8 @@ public class BookService extends BaseService<Book, BookRepository> {
     }
 
     public Optional<BookCopy> getAvailableCopy(Book book){
-        for (BookCopy copy : book.getCopies()) {
-            if (copy.getStatus() == BookStatus.AVAILABLE) 
-                return Optional.of(copy);
-        }
-        return Optional.empty();
+        return book.getCopies().stream()
+            .filter(copy -> copy.getStatus() == BookStatus.AVAILABLE)
+            .findFirst();
     }
 }

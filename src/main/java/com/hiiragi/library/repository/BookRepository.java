@@ -1,5 +1,6 @@
 package com.hiiragi.library.repository;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import com.hiiragi.library.enums.BookStatus;
@@ -15,21 +16,15 @@ public class BookRepository
     private Long categoryNextId = 1L;
     
     public Optional<Book> findByTitle(String title) {
-        for (Book book : entities) {
-            if (book.getTitle().equalsIgnoreCase(title)) {
-                return Optional.of(book);
-            }
-        }
-        return Optional.empty();
+        return entities.stream()
+                    .filter((book) -> Objects.equals(book.getTitle(), title))
+                    .findAny();
     }
 
     public Optional<Book> findByIsbn(String isbn){
-        for (Book book : entities) {
-            if (book.getIsbn().equals(isbn)) {
-                return Optional.of(book);
-            }
-        }
-        return Optional.empty();
+        return entities.stream()
+                    .filter((book) -> Objects.equals(book.getIsbn(), isbn))
+                    .findAny();
     }
 
     @Override
