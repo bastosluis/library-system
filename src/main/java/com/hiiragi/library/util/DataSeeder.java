@@ -1,15 +1,15 @@
 package com.hiiragi.library.util;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.BookRepository;
 import com.hiiragi.library.repository.UserRepository;
+
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 public class DataSeeder {
 
@@ -21,7 +21,6 @@ public class DataSeeder {
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
         mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
     }
 
     public void seed() {
@@ -45,7 +44,7 @@ public class DataSeeder {
                 mapper.getTypeFactory()
                     .constructCollectionType(List.class, type)
             );
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new RuntimeException(e);
         }
     }
