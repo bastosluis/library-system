@@ -23,7 +23,9 @@ public class LoanService extends BaseService<Loan, LoanRepository>{
     }
     
     public void updateLoans(){
-        this.repository.findAll().forEach(Loan::update);
+        this.repository.findAll().forEach(loan -> {
+            if (loan != null) loan.update();
+        });
     }
 
     public List<Loan> findByUserId(Long id){
