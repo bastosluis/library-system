@@ -2,11 +2,14 @@ package com.hiiragi.library.service;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.hiiragi.library.enums.BookStatus;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.BookCopy;
 import com.hiiragi.library.repository.BookRepository;
 
+@Service
 public class BookService extends BaseService<Book, BookRepository> {
         
     public BookService(BookRepository bookRepository){

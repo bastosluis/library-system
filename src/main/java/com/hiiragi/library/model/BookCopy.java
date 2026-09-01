@@ -2,6 +2,9 @@ package com.hiiragi.library.model;
 
 import com.hiiragi.library.enums.BookStatus;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class BookCopy extends BaseEntity{
     private Long bookId;
     private BookStatus status;

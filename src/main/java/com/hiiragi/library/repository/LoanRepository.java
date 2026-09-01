@@ -3,9 +3,12 @@ package com.hiiragi.library.repository;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.stereotype.Repository;
+
 import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.model.Loan;
 
+@Repository
 public class LoanRepository 
         extends InMemoryRepository<Loan>{
 

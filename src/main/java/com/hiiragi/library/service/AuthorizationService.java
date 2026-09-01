@@ -1,5 +1,7 @@
 package com.hiiragi.library.service;
 
+import org.springframework.stereotype.Service;
+
 import com.hiiragi.library.application.Session;
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.EmptySessionException;
@@ -7,6 +9,8 @@ import com.hiiragi.library.exceptions.InactiveUserException;
 import com.hiiragi.library.exceptions.LoanLimitExceededExcetion;
 import com.hiiragi.library.exceptions.UnauthorizedException;
 import com.hiiragi.library.model.User;
+
+@Service
 public class AuthorizationService {
     private Session session;
 

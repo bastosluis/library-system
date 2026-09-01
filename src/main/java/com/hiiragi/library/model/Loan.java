@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import com.hiiragi.library.enums.LoanStatus;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Loan extends BaseEntity{
     private Long bookId;
     private Long bookCopyId;

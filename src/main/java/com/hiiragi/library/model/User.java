@@ -5,6 +5,9 @@ import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.LoanLimitExceededExcetion;
 import com.hiiragi.library.exceptions.NegativeLoanAmountException;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class User extends BaseEntity{
     private String name;
     private String email;

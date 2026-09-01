@@ -3,6 +3,9 @@ package com.hiiragi.library.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Category extends BaseEntity{
     private String name;
     private String description;

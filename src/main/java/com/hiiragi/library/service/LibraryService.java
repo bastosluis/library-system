@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.hiiragi.library.enums.BookStatus;
 import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.enums.UserRole;
@@ -20,6 +22,7 @@ import com.hiiragi.library.model.BookCopy;
 import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.model.User;
 
+@Service
 public class LibraryService {
 
     private final BookService bookService;

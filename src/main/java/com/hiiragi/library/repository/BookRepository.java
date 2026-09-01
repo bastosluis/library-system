@@ -3,11 +3,14 @@ package com.hiiragi.library.repository;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import com.hiiragi.library.enums.BookStatus;
 import com.hiiragi.library.exceptions.DuplicateBookException;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.BookCopy;
 
+@Repository
 public class BookRepository
         extends InMemoryRepository<Book> {
     

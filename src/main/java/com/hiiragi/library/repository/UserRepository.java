@@ -3,9 +3,12 @@ package com.hiiragi.library.repository;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import com.hiiragi.library.exceptions.DuplicateUserException;
 import com.hiiragi.library.model.User;
 
+@Repository
 public class UserRepository
         extends InMemoryRepository<User> {
 

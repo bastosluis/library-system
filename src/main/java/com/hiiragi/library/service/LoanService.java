@@ -2,10 +2,13 @@ package com.hiiragi.library.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.hiiragi.library.enums.LoanStatus;
 import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.repository.LoanRepository;
 
+@Service
 public class LoanService extends BaseService<Loan, LoanRepository>{
 
     public LoanService(LoanRepository repository) {

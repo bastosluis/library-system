@@ -9,6 +9,9 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Book extends BaseEntity {
     private String title;
     private String isbn;

@@ -2,12 +2,15 @@ package com.hiiragi.library.service;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
 import com.hiiragi.library.enums.UserRole;
 import com.hiiragi.library.exceptions.AdminRoleChangeException;
 import com.hiiragi.library.exceptions.UserNotFoundException;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.UserRepository;
 
+@Service
 public class UserService extends BaseService<User, UserRepository>{
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
     private static final String PHONE_REGEX = "\\d{8,15}";

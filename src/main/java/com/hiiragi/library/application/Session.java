@@ -2,8 +2,11 @@ package com.hiiragi.library.application;
 
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.hiiragi.library.model.User;
 
+@Component
 public class Session {
 
     private User currentUser;
