@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.hiiragi.library.exceptions.NotFoundException;
 import com.hiiragi.library.model.BaseEntity;
 
 public abstract class InMemoryRepository<T extends BaseEntity>
@@ -24,6 +25,18 @@ public abstract class InMemoryRepository<T extends BaseEntity>
         }
 
         return entity;
+    }
+    
+    @Override
+    public T update(T entity, Long id) throws NotFoundException{
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).getId().equals(id)) {
+                entities.set(i, entity);
+                return entity;
+            }
+        }
+
+        throw new NotFoundException("id: "+id);
     }
     
     @Override

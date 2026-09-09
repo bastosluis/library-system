@@ -6,6 +6,8 @@ import java.util.Optional;
 public interface CrudRepository<T> {
     T save(T entity);
 
+    T update(T entity, Long id);
+
     Optional<T> findById(Long id);
 
     boolean deleteById(Long id);

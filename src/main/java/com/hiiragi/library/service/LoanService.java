@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.hiiragi.library.enums.LoanStatus;
+import com.hiiragi.library.exceptions.LoanNotFoundException;
+import com.hiiragi.library.exceptions.NotFoundException;
 import com.hiiragi.library.model.Loan;
 import com.hiiragi.library.repository.LoanRepository;
 
@@ -22,7 +24,11 @@ public class LoanService extends BaseService<Loan, LoanRepository>{
 
     @Override
     public void removeById(Long id){
-        super.removeById(id);
+        try {
+            super.removeById(id);
+        } catch (NotFoundException e) {
+            throw new LoanNotFoundException(id);
+        }
     }
     
     public void updateLoans(){

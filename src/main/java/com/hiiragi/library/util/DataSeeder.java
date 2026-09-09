@@ -3,6 +3,9 @@ package com.hiiragi.library.util;
 import java.io.InputStream;
 import java.util.List;
 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.User;
 import com.hiiragi.library.repository.BookRepository;
@@ -11,16 +14,22 @@ import com.hiiragi.library.repository.UserRepository;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
-public class DataSeeder {
+@Component
+public class DataSeeder implements CommandLineRunner{
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final ObjectMapper mapper;
 
-    public DataSeeder(BookRepository bookRepository, UserRepository userRepository) {
+    @Override
+    public void run(String... args){
+        seed();
+    }
+
+    public DataSeeder(BookRepository bookRepository, UserRepository userRepository, ObjectMapper objectMapper) {
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
-        mapper = new ObjectMapper();
+        this.mapper = objectMapper;
     }
 
     public void seed() {

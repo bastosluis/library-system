@@ -14,6 +14,8 @@ import com.hiiragi.library.service.LoanService;
 import com.hiiragi.library.service.UserService;
 import com.hiiragi.library.util.DataSeeder;
 
+import tools.jackson.databind.ObjectMapper;
+
 
 // Singleton Pattern
 public enum MainMenu implements Menu{
@@ -66,7 +68,7 @@ public enum MainMenu implements Menu{
     }
 
     private void seedData(BookRepository bookRepository, UserRepository userRepository){
-        DataSeeder seeder = new DataSeeder(bookRepository, userRepository);
+        DataSeeder seeder = new DataSeeder(bookRepository, userRepository, new ObjectMapper());
         seeder.seed();
     }
     

@@ -24,6 +24,10 @@ public abstract class BaseService<
         }
     }
 
+    public T update(T entity, Long id){
+        return this.repository.update(entity, id);
+    }
+
     public Optional<T> findById(Long id){
         return this.repository.findById(id);
     }

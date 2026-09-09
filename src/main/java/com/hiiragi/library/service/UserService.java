@@ -36,6 +36,11 @@ public class UserService extends BaseService<User, UserRepository>{
         super.removeById(id);
     }
 
+    public void removeByLogin(String login){
+        User user = this.repository.findByLogin(login).orElseThrow(() -> new UserNotFoundException(login));
+        this.repository.delete(user);    
+    }
+
     public User createUser(String name, String email, String phone, UserRole role, String login, String password){
         if (!isValidEmail(email)){
             throw new IllegalArgumentException("Invalid email");

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Book extends BaseEntity {
@@ -17,8 +18,13 @@ public class Book extends BaseEntity {
     private String isbn;
     private String description;
     private Year publicationYear;
+
+    @ManyToOne
     private Author author;
+
+    @ManyToOne
     private Category category;
+    
     private ArrayList<BookCopy> copies;
 
     public Book(String title,

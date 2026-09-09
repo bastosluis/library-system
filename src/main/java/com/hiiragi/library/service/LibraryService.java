@@ -197,18 +197,19 @@ public class LibraryService {
     // =========================
 
     public void borrowBook(
-            String title,
+            Long bookId,
             Long userId,
             LocalDate dueDate) {
 
         authorizationService.requireActive();
         authorizationService.requireLoanUnderLimit();
-
+    
         User user = userService.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        Book foundBook = bookService.findByTitle(title).
-                orElseThrow(() -> new BookNotFoundException(title));
+        Book foundBook = bookService.findById(bookId).
+                orElseThrow(() -> new BookNotFoundException(bookId));
+        String title = foundBook.getTitle();
 
         BookCopy copy = bookService.getAvailableCopy(foundBook).
                 orElseThrow(() -> new NoAvailableCopiesException(title));
@@ -225,6 +226,16 @@ public class LibraryService {
         loanService.add(loan);
         user.increaseLoan();
     }
+
+    public void borrowBook(
+            String title,
+            Long userId,
+            LocalDate dueDate) {
+        Long bookId = bookService.findByTitle(title)
+            .orElseThrow(() -> new BookNotFoundException(title))
+            .getId();
+        borrowBook(bookId, userId, dueDate);
+        }
 
     public void returnBook(Long loanId)
             throws LoanNotFoundException,

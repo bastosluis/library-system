@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.hiiragi.library.enums.BookStatus;
+import com.hiiragi.library.exceptions.BookNotFoundException;
+import com.hiiragi.library.exceptions.NotFoundException;
 import com.hiiragi.library.model.Book;
 import com.hiiragi.library.model.BookCopy;
 import com.hiiragi.library.repository.BookRepository;
@@ -27,7 +29,16 @@ public class BookService extends BaseService<Book, BookRepository> {
 
     @Override
     public void removeById(Long id){
-        super.removeById(id);
+        try {
+            super.removeById(id);
+        } catch (NotFoundException e) {
+            throw new BookNotFoundException(id);    
+        }
+    }
+
+    public void removeByTitle(String title){
+        Book book = findByTitle(title).orElseThrow(() -> new BookNotFoundException(title));
+        this.removeById(book.getId());
     }
 
     public Book add(Book book){
