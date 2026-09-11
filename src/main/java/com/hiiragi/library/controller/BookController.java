@@ -50,13 +50,13 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public EntityModel<Book> getBookByTitle(@RequestParam String title){
+    public EntityModel<Book> getByTitle(@RequestParam String title){
         Book book = bookService.findByTitle(title).orElseThrow(() -> new BookNotFoundException(title));
         return assembler.toModel(book); 
     }
     
     @PostMapping
-    public ResponseEntity<?> newBook(@RequestBody Book book){
+    public ResponseEntity<?> create(@RequestBody Book book){
         EntityModel<Book> entityModel = assembler.toModel(bookService.add(book)); 
         return ResponseEntity
             .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -64,12 +64,10 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody Book newBook){
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Book newBook){
         Book updatedBook = bookService.update(newBook, id);
         EntityModel<Book> entityModel = assembler.toModel(updatedBook);
-        return ResponseEntity //
-            .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-            .body(entityModel);
+        return ResponseEntity.ok(entityModel); 
     }
     
     @DeleteMapping("/{id}")
@@ -78,8 +76,8 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{title}")
-    public ResponseEntity<?> deleteBookByTitle(@PathVariable String title){
+    @DeleteMapping(params = "title")
+    public ResponseEntity<?> deleteBookByTitle(@RequestParam String title){
         bookService.removeByTitle(title);
         return ResponseEntity.noContent().build();
     }

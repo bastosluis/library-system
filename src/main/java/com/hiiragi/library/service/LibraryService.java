@@ -196,7 +196,7 @@ public class LibraryService {
     // Business logic
     // =========================
 
-    public void borrowBook(
+    public Loan borrowBook(
             Long bookId,
             Long userId,
             LocalDate dueDate) {
@@ -223,19 +223,24 @@ public class LibraryService {
                 dueDate
         );
 
-        loanService.add(loan);
         user.increaseLoan();
+        return loanService.add(loan);
     }
 
-    public void borrowBook(
+    public Loan borrowBook(
             String title,
             Long userId,
             LocalDate dueDate) {
         Long bookId = bookService.findByTitle(title)
             .orElseThrow(() -> new BookNotFoundException(title))
             .getId();
-        borrowBook(bookId, userId, dueDate);
+        return borrowBook(bookId, userId, dueDate);
         }
+
+    public Loan borrowBook(Long bookId, Long userId){
+        // default due date is 14 days (2 weeks)
+        return borrowBook(bookId, userId, LocalDate.now().plusDays(14));    
+    }
 
     public void returnBook(Long loanId)
             throws LoanNotFoundException,
